@@ -1,12 +1,10 @@
 package ru.kata.spring.boot_security.demo.models;
 
+import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -18,6 +16,8 @@ public class User {
     private String name;
     private String password;
     private String email;
+    @OneToMany(mappedBy= "user")
+    private Set<Role> roles;
 
     public User() {
     }
