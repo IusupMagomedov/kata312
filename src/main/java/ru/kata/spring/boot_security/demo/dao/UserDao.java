@@ -13,7 +13,7 @@ public interface UserDao extends JpaRepository<User, Long> {
 
     Optional<User> findByUsername(String username);
 
-    Long save(User user);
+    User save(User user);
 
     void update(User user);
 

@@ -92,9 +92,9 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Long save(User user) {
+    public User save(User user) {
         entityManager.persist(user);
-        return user.getId();
+        return user;
     }
 
     @Override

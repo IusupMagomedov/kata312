@@ -43,8 +43,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void createUser(String name, String username, String email, String password) {
         User user = new User(name, username, password, email);
-        Long id = userDao.save(user);
-        System.out.println("User has been created, id: " + id);
+        User savedUser = userDao.save(user);
+        System.out.println("User has been created, id: " + savedUser.getId());
     }
 
     @Transactional
