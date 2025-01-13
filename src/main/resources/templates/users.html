@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Users</title>
+</head>
+<body>
+<table>
+  <thead>
+  <th>Name</th>
+  <th>Email</th>
+  <th>Delete</th>
+  <th>Update</th>
+  </thead>
+  <tbody id="tbody">
+  <tr th:each="user : ${users}" th:id="${user.id}">
+    <td th:text="${user.name}"></td>
+    <td th:text="${user.email}"></td>
+    <td>
+      <form action="/users/delete" method="post">
+        <input type="hidden" name="id" th:value="${user.id}">
+        <input type="submit" value="Delete">
+      </form>
+    </td>
+    <td><a th:href="@{'/users/update?id=' + ${user.id}}">Update</a></td>
+  </tr>
+  </tbody>
+  <p>Create user</p>
+  <form id="form" action="/users/create" method="post">
+    <label for="nameToCreate">Name:</label>
+    <input type="text" id="nameToCreate" name="name"><br><br>
+    <label for="emailToCreate">Email:</label>
+    <input type="email" id="emailToCreate" name="email"><br><br>
+    <label for="passwordToCreate">Password:</label>
+    <input type="password" id="passwordToCreate" name="password"><br><br>
+    <input type="submit" id="createButton" value="Create">
+  </form>
+</table>
+
+</body>
+</html>

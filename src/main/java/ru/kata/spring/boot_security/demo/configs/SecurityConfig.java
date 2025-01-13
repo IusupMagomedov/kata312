@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -35,19 +36,16 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/index").permitAll()
-                        .requestMatchers("/users/get").hasRole("USER")
-                        .requestMatchers("/users/delete").hasRole("ADMIN")
-                        .requestMatchers("/users/update").hasRole("ADMIN")
-                        .requestMatchers("/users/create").hasRole("ADMIN")
+                        .requestMatchers("/user").hasRole("USER")
+                        .requestMatchers("/users").hasRole("ADMIN")
                         .anyRequest().authenticated()
-                );
-//                .formLogin(form -> form
-//                        .successHandler(successUserHandler)
-//                        .permitAll()
-//                )
-//                .logout(logout -> logout
-//                        .permitAll()
-//                );
+                )
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .successHandler(successUserHandler)
+                        .permitAll()
+                )
+                .logout(LogoutConfigurer::permitAll);
         return http.build();
     }
 
