@@ -21,6 +21,7 @@ public class UserServiceImpl implements UserService {
         this.userDao = userDao;
     }
 
+
     @Override
     public List<User> getUsers() {
         return userDao.findAll();
@@ -36,7 +37,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> getUser(Long id) {
-        return userDao.findById(id);
+        return Optional.ofNullable(userDao.findById(id)); //findById(id);
     }
 
     @Transactional
@@ -50,9 +51,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void updateUser(Long id, String name, String username, String email, String password) {
-        User user = userDao.findById(id).orElseThrow(
-                () -> new UsernameNotFoundException("User not found: " + username)
-        );
+        User user = userDao.findById(id);
         user.setName(name);
         user.setUsername(username);
         user.setEmail(email);
@@ -68,10 +67,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userDao
-                .findByUsername(username)
-                .orElseThrow(
-                        () -> new UsernameNotFoundException("User not found: " + username)
-                );
+        return userDao.findByUsername(username);
     }
 }
