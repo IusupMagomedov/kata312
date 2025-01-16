@@ -18,4 +18,8 @@ public class HomeController {
     public String getLogoutPage(Model model) {
         return "logout";
     }
+    @GetMapping("/user")
+    public String getUserPage(Model model) {
+        return "user";
+    }
 }
