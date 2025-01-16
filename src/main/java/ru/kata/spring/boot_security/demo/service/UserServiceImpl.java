@@ -6,10 +6,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
+import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Transactional(readOnly = true)
@@ -28,6 +30,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<User> findByUsername(String username) {
+        return Optional.ofNullable(userDao.findByUsername(username));
+    }
+
+    @Override
     public List<User> getUsers(Integer limit) {
 //        if (limit != null) {
 //            return userDao.findAll().stream().limit(limit).toList();
@@ -42,8 +49,8 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void createUser(String name, String username, String email, String password) {
-        User user = new User(name, username, password, email);
+    public void createUser(String name, String username, String email, String password, Set<Role> roles) {
+        User user = new User(username, password, name, email, roles);
         User savedUser = userDao.save(user);
         System.out.println("User has been created, id: " + savedUser.getId());
     }

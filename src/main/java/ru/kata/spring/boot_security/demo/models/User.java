@@ -17,8 +17,6 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String username;
     private String password;
-    @Transient
-    private String passwordConfirm;
     private String name;
     private String email;
     @ManyToMany(fetch = FetchType.EAGER)
@@ -27,11 +25,12 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String name, String username, String password, String email) {
-        this.name = name;
+    public User(String name, String username, String password, String email, Set<Role> roles) {
         this.username = username;
         this.password = password;
+        this.name = name;
         this.email = email;
+        this.roles = roles;
     }
 
     @Override
@@ -50,14 +49,6 @@ public class User implements UserDetails {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getPasswordConfirm() {
-        return passwordConfirm;
-    }
-
-    public void setPasswordConfirm(String passwordConfirm) {
-        this.passwordConfirm = passwordConfirm;
     }
 
     public String getName() {

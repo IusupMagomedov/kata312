@@ -5,10 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/users")
@@ -28,8 +30,12 @@ public class UsersController {
     }
 
     @PostMapping("/create")
-    public String addUser(@RequestParam("name") String name, @RequestParam("username") String username, @RequestParam("email") String email, @RequestParam("password") String password) {
-        userService.createUser(name, username, email, password);
+    public String addUser(@RequestParam("name") String name,
+                          @RequestParam("username") String username,
+                          @RequestParam("email") String email,
+                          @RequestParam("password") String password,
+                          @RequestParam("roles") Set<Role> roles) {
+        userService.createUser(username, password, name, email, roles);
         return "redirect:/users";
     }
 
