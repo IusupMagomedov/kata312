@@ -4,11 +4,19 @@
     <title>Spring Security Example</title>
 </head>
 <body>
-<h1>User, welcome spring boot security page!</h1>
-    <p th:text="${user.name}"></p>
-    <p th:text="${user.email}"></p>
-    <p>
-        <a href="/logout">Logout</a>
-    </p>
+    <h1>User's details</h1>
+    <table>
+        <tr>
+            <th>Property Name</th>
+            <th>Value</th>
+        </tr>
+        <tr th:each="entry : ${userProperties}">
+            <td th:text="${entry.key}">Property</td>
+            <td th:text="${entry.value}">Value</td>
+        </tr>
+    </table>
+    <form th:action="@{/logout}" method="post">
+        <button type="submit">Logout</button>
+    </form>
 </body>
 </html>

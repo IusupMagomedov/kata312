@@ -18,24 +18,34 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public String getHomePage(Model model) {
+    public String getHomePage(Model model, @AuthenticationPrincipal UserDetails authenticatedUser) {
+        if(authenticatedUser == null) {
+            model.addAttribute("isAuthenticated", false);
+        } else {
+            model.addAttribute("isAuthenticated", true);
+            User user = userService.findByUsername(authenticatedUser.getUsername())
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            model.addAttribute("user", user);  // Pass the full user object
+        }
         return "home";
     }
+
     @GetMapping("/login")
     public String getLoginPage(Model model) {
         return "login";
     }
+
     @GetMapping("/logout")
     public String getLogoutPage(Model model) {
         return "logout";
     }
+
     @GetMapping("/user")
     public String getUserPage(Model model, @AuthenticationPrincipal UserDetails authenticatedUser) {
-        // Fetch the full User entity from the database (if needed)
         User user = userService.findByUsername(authenticatedUser.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        model.addAttribute("user", user);  // Pass the full user object
+        model.addAttribute("user", user);
+        model.addAttribute("userProperties", ObjectUtils.getObjectProperties(user));
         return "user";
     }
 }
