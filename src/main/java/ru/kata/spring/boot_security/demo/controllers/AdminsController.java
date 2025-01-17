@@ -9,22 +9,24 @@ import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 @Controller
-@RequestMapping("/users")
-public class UsersController {
+@RequestMapping("/admin")
+public class AdminsController {
     private final UserService userService;
 
     @Autowired
-    public UsersController(UserService userService) {
+    public AdminsController(UserService userService) {
         this.userService = userService;
     }
 
     @GetMapping
     public String getUsers(@RequestParam(value = "limit", required = false) Integer limit, Model model) {
         List<User> users = userService.getUsers(limit);
+        List<Role> roles =
         model.addAttribute("users", users);
         return "users";
     }
@@ -36,7 +38,7 @@ public class UsersController {
                           @RequestParam("password") String password,
                           @RequestParam("roles") Set<Role> roles) {
         userService.createUser(username, password, name, email, roles);
-        return "redirect:/users";
+        return "redirect:/admin";
     }
 
     @GetMapping("/update")
