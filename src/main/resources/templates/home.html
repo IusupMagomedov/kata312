@@ -10,6 +10,8 @@
 <!-- Check if user is logged in -->
 <div th:if="${isAuthenticated}">
   <p>Welcome back, <b th:text="${user.name}"/>!</p>
+  <p><a href="/user">To user's page</a></p>
+  <p th:if="${isAdmin}"><a href="/admin">To admin's page</a></p>
   <form th:action="@{/logout}" method="post">
     <button type="submit">Logout</button>
   </form>
