@@ -15,6 +15,7 @@
             <td th:text="${entry.value}">Value</td>
         </tr>
     </table>
+    <p th:if="${isAdmin}"><a href="/admin">To admin's page</a></p>
     <form th:action="@{/logout}" method="post">
         <button type="submit">Logout</button>
     </form>

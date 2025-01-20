@@ -2,6 +2,11 @@ package ru.kata.spring.boot_security.demo.controllers;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -36,11 +41,14 @@ public class AdminsController {
     }
 
     @PostMapping("/create")
-    public String addUser(@RequestParam("name") String name,
+    public String addUser(Model model,
+                          @RequestParam("name") String name,
                           @RequestParam("username") String username,
                           @RequestParam("email") String email,
                           @RequestParam("password") String password,
-                          @RequestParam("roles") String[] roleIds) {
+                          @RequestParam("roles") String[] roleIds,
+                          @AuthenticationPrincipal UserDetails authenticatedUser,
+                          Authentication authentication) {
 
         Set<Role> roles = Arrays.stream(roleIds)
                 .mapToLong(Long::parseLong)
@@ -50,6 +58,16 @@ public class AdminsController {
                 .peek(System.out::println)
                 .collect(Collectors.toSet());
         userService.createUser(username, password, name, email, roles);
+        if (authenticatedUser == null) {
+            model.addAttribute("isAuthenticated", false);
+        } else {
+            model.addAttribute("isAuthenticated", true);
+            User user = userService.findByUsername(authenticatedUser.getUsername()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            Set<String> stringRoles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
+            boolean isAdmin = stringRoles.contains("ROLE_ADMIN");
+            model.addAttribute("isAdmin", isAdmin);
+            model.addAttribute("user", user);
+        }
         return "redirect:/admin";
     }
 
@@ -62,12 +80,12 @@ public class AdminsController {
     @PostMapping("/update")
     public String updateUser(@RequestParam("id") Long id, @RequestParam("name") String name, @RequestParam("username") String username, @RequestParam("email") String email, @RequestParam("password") String password) {
         userService.updateUser(id, name, username, email, password);
-        return "redirect:/users";
+        return "redirect:/admin";
     }
 
     @PostMapping("/delete")
     public String deleteUser(@RequestParam("id") Long id) {
         userService.deleteUser(id);
-        return "redirect:/users";
+        return "redirect:/admin";
     }
 }

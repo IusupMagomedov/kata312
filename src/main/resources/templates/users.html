@@ -17,12 +17,12 @@
     <td th:text="${user.name}"></td>
     <td th:text="${user.email}"></td>
     <td>
-      <form action="/users/delete" method="post">
+      <form action="/admin/delete" method="post">
         <input type="hidden" name="id" th:value="${user.id}">
         <input type="submit" value="Delete">
       </form>
     </td>
-    <td><a th:href="@{'/users/update?id=' + ${user.id}}">Update</a></td>
+    <td><a th:href="@{'/admin/update?id=' + ${user.id}}">Update</a></td>
   </tr>
   </tbody>
   <p>Create user</p>
