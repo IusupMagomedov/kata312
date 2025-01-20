@@ -19,7 +19,7 @@ public interface UserService extends UserDetailsService {
 
     void createUser(String username, String password, String name, String email, Set<Role> roles);
 
-    void updateUser(Long id, String name, String username, String email, String password);
+    void updateUser(Long id, String username, String password, String name, String email, Set<Role> roles);
 
     void deleteUser(Long id);
 }

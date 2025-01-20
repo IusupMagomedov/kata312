@@ -2,11 +2,13 @@ package ru.kata.spring.boot_security.demo.controllers;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,11 +26,13 @@ import java.util.stream.Collectors;
 public class AdminsController {
     private final UserService userService;
     private final RoleService roleService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AdminsController(UserService userService, RoleService roleService) {
+    public AdminsController(UserService userService, RoleService roleService, @Qualifier("passwordEncoder") PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.roleService = roleService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping
@@ -73,13 +77,28 @@ public class AdminsController {
 
     @GetMapping("/update")
     public String updateUser(@RequestParam("id") Long id, Model model) {
-        model.addAttribute("user", userService.getUser(id));
-        return "/update";
+        List<Role> roles = roleService.getRoles();
+        User user = userService.getUser(id).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        model.addAttribute("roles", roles);
+        model.addAttribute("user", user);
+        return "update";
     }
 
     @PostMapping("/update")
-    public String updateUser(@RequestParam("id") Long id, @RequestParam("name") String name, @RequestParam("username") String username, @RequestParam("email") String email, @RequestParam("password") String password) {
-        userService.updateUser(id, name, username, email, password);
+    public String updateUser(@RequestParam("id") Long id,
+                             @RequestParam("username") String username,
+                             @RequestParam("password") String password,
+                             @RequestParam("name") String name,
+                             @RequestParam("email") String email,
+                             @RequestParam("roles") String[] roleIds) {
+        Set<Role> roles = Arrays.stream(roleIds)
+                .mapToLong(Long::parseLong)
+                .mapToObj(roleService::getRole)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .peek(System.out::println)
+                .collect(Collectors.toSet());
+        userService.updateUser(id, username, password, name, email, roles);
         return "redirect:/admin";
     }
 
