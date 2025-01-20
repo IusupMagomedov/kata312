@@ -5,6 +5,9 @@
   <title>Users</title>
 </head>
 <body>
+<form th:action="@{/logout}" method="post">
+  <button type="submit">Logout</button>
+</form>
 <table>
   <thead>
   <th>Name</th>
@@ -42,6 +45,8 @@
     </div>
     <input type="submit" id="createButton" value="Create">
   </form>
+
+
 </table>
 
 </body>
