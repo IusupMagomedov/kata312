@@ -26,7 +26,7 @@
   </tr>
   </tbody>
   <p>Create user</p>
-  <form id="form" action="/users/create" method="post">
+  <form id="form" action="/admin/create" method="post">
     <label for="usernameToCreate">Username:</label>
     <input type="text" id="usernameToCreate" name="username"><br><br>
     <label for="passwordToCreate">Password:</label>
@@ -36,7 +36,7 @@
     <label for="emailToCreate">Email:</label>
     <input type="email" id="emailToCreate" name="email"><br><br>
     <label>Roles</label>
-    <div th:each="role : ${allRoles}">
+    <div th:each="role : ${roles}">
       <input type="checkbox" name="roles" th:value="${role.id}" />
       <label th:for="${role.id}" th:text="${role.name}"></label><br/>
     </div>

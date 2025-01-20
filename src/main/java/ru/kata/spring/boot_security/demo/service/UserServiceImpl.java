@@ -3,6 +3,7 @@ package ru.kata.spring.boot_security.demo.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
@@ -17,12 +18,13 @@ import java.util.Set;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
     private final UserDao userDao;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserDao userDao) {
+    public UserServiceImpl(UserDao userDao, PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
+        this.passwordEncoder = passwordEncoder;
     }
-
 
     @Override
     public List<User> getUsers() {
@@ -49,8 +51,9 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void createUser(String name, String username, String email, String password, Set<Role> roles) {
-        User user = new User(username, password, name, email, roles);
+    public void createUser(String username, String password, String name, String email, Set<Role> roles) {
+        String encodedPassword = passwordEncoder.encode(password);
+        User user = new User(username, encodedPassword, name, email, roles);
         User savedUser = userDao.save(user);
         System.out.println("User has been created, id: " + savedUser.getId());
     }

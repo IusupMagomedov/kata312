@@ -1,5 +1,7 @@
 package ru.kata.spring.boot_security.demo.models;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,7 +14,8 @@ import java.util.Set;
 @Table(name = "users")
 public class User implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "increment")
+    @GenericGenerator(name = "increment", strategy = "increment")
     private Long id;
     @Column(unique = true)
     private String username;
@@ -25,7 +28,7 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String name, String username, String password, String email, Set<Role> roles) {
+    public User(String username, String password, String name, String email, Set<Role> roles) {
         this.username = username;
         this.password = password;
         this.name = name;
