@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.controllers;
 
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,12 +15,9 @@ import org.springframework.security.core.Authentication;
 import java.util.Set;
 
 @Controller
+@AllArgsConstructor
 public class HomeController {
     private final UserService userService;
-
-    public HomeController(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping("/")
     public String getHomePage(Model model, @AuthenticationPrincipal UserDetails authenticatedUser, Authentication authentication) {
@@ -51,15 +49,11 @@ public class HomeController {
         User user = userService.findByUsername(authenticatedUser.getUsername()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         model.addAttribute("user", user);
         model.addAttribute("userProperties", ObjectUtils.getObjectProperties(user));
-        if (authenticatedUser == null) {
-            model.addAttribute("isAuthenticated", false);
-        } else {
-            model.addAttribute("isAuthenticated", true);
-            Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
-            boolean isAdmin = roles.contains("ROLE_ADMIN");
-            model.addAttribute("isAdmin", isAdmin);
-            model.addAttribute("user", user);
-        }
+        model.addAttribute("isAuthenticated", true);
+        Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
+        boolean isAdmin = roles.contains("ROLE_ADMIN");
+        model.addAttribute("isAdmin", isAdmin);
+        model.addAttribute("user", user);
         return "user";
     }
 }

@@ -3,20 +3,18 @@ package ru.kata.spring.boot_security.demo.dao;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.stereotype.Repository;
 import ru.kata.spring.boot_security.demo.models.Role;
 
 import java.util.List;
 
 @Repository
+@AllArgsConstructor
 public class RoleDaoImpl implements RoleDao {
     private final EntityManager entityManager;
-
-
-    public RoleDaoImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
-
 
     @Override
     public Role findByName(String name) {

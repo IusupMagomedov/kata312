@@ -2,6 +2,7 @@ package ru.kata.spring.boot_security.demo.dao;
 
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
+import lombok.AllArgsConstructor;
 import ru.kata.spring.boot_security.demo.models.User;
 import org.springframework.stereotype.Repository;
 
@@ -10,14 +11,9 @@ import jakarta.persistence.EntityManager;
 import java.util.List;
 
 @Repository
+@AllArgsConstructor
 public class UserDaoImpl implements UserDao {
-
     private final EntityManager entityManager;
-
-
-    public UserDaoImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
 
     @Override
     public User findByUsername(String username) {
