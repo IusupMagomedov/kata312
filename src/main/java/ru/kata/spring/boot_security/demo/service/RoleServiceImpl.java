@@ -38,7 +38,8 @@ public class RoleServiceImpl implements RoleService {
     @Transactional
     @Override
     public Role createRole(String name) {
-        Role role = new Role(name);
+        Role role = new Role();
+        role.setName(name);
         Role savedRole = roleDao.save(role);
         System.out.println("Role has been created, id: " + savedRole.getId());
         return savedRole;
