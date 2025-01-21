@@ -1,14 +1,12 @@
 package ru.kata.spring.boot_security.demo.controllers;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,17 +21,10 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
+@AllArgsConstructor
 public class AdminsController {
     private final UserService userService;
     private final RoleService roleService;
-    private final PasswordEncoder passwordEncoder;
-
-    @Autowired
-    public AdminsController(UserService userService, RoleService roleService, @Qualifier("passwordEncoder") PasswordEncoder passwordEncoder) {
-        this.userService = userService;
-        this.roleService = roleService;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @GetMapping
     public String getUsers(@RequestParam(value = "limit", required = false) Integer limit, Model model) {
