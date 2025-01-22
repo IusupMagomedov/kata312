@@ -18,4 +18,6 @@ public interface RoleDao {
     void update(Role role);
 
     void delete(Long role);
+
+    void deleteAllRoles();
 }

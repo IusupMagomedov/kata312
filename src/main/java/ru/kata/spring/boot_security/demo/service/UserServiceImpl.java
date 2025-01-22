@@ -78,6 +78,12 @@ public class UserServiceImpl implements UserService {
         userDao.delete(id);
     }
 
+    @Transactional
+    @Override
+    public void deleteAllUsers() {
+        userDao.deleteAllUsers();
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userDao.findByUsername(username);

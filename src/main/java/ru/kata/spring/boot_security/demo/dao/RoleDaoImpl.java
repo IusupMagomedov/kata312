@@ -53,4 +53,9 @@ public class RoleDaoImpl implements RoleDao {
         Role role = entityManager.find(Role.class, id);
         entityManager.remove(role);
     }
+
+    @Override
+    public void deleteAllRoles() {
+        entityManager.createQuery("DELETE FROM Role r").executeUpdate();
+    }
 }
