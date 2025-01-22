@@ -2,42 +2,30 @@ package ru.kata.spring.boot_security.demo.controllers;
 
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import ru.kata.spring.boot_security.demo.models.User;
-import ru.kata.spring.boot_security.demo.service.UserService;
 import org.springframework.security.core.Authentication;
-
-import java.util.Set;
+import ru.kata.spring.boot_security.demo.service.UserSessionService;
 
 @Controller
 @AllArgsConstructor
 public class HomeController {
-    private final UserService userService;
+    private final UserSessionService userSessionService;
 
     @GetMapping("/")
     public String getHomePage(Model model,
                               @AuthenticationPrincipal UserDetails authenticatedUser,
                               Authentication authentication) {
-        if (authenticatedUser == null) {
-            model.addAttribute("isAuthenticated", false);
-        } else {
-            model.addAttribute("isAuthenticated", true);
-            User user = userService
-                    .findByUsername(authenticatedUser.getUsername())
-                    .orElseThrow(
-                            () -> new UsernameNotFoundException("User not found")
-                    );
-            Set<String> roles = AuthorityUtils
-                    .authorityListToSet(authentication.getAuthorities());
-            boolean isAdmin = roles.contains("ROLE_ADMIN");
-            model.addAttribute("isAdmin", isAdmin);
-            model.addAttribute("user", user);
-        }
+        model.addAttribute("isAuthenticated",
+                userSessionService.isAuthenticated(authentication));
+        model.addAttribute("isAdmin",
+                userSessionService.isAdmin(authentication));
+        model.addAttribute("user",
+                userSessionService
+                        .getAuthenticatedUser(authenticatedUser)
+                        .get());
         return "home";
     }
 
@@ -56,19 +44,14 @@ public class HomeController {
                               @AuthenticationPrincipal
                               UserDetails authenticatedUser,
                               Authentication authentication) {
-        User user = userService
-                .findByUsername(authenticatedUser.getUsername())
-                .orElseThrow(
-                        () -> new UsernameNotFoundException("User not found")
-                );
-        model.addAttribute("user", user);
-        model.addAttribute("userProperties", ObjectUtils.getObjectProperties(user));
-        model.addAttribute("isAuthenticated", true);
-        Set<String> roles = AuthorityUtils
-                .authorityListToSet(authentication.getAuthorities());
-        boolean isAdmin = roles.contains("ROLE_ADMIN");
-        model.addAttribute("isAdmin", isAdmin);
-        model.addAttribute("user", user);
+        model.addAttribute("isAuthenticated",
+                userSessionService.isAuthenticated(authentication));
+        model.addAttribute("isAdmin",
+                userSessionService.isAdmin(authentication));
+        model.addAttribute("user",
+                userSessionService.getAuthenticatedUser(authenticatedUser));
+        model.addAttribute("userProperties",
+                userSessionService.getUserProperties(authenticatedUser));
         return "user";
     }
 }
