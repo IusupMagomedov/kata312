@@ -1,4 +1,4 @@
-package ru.kata.spring.boot_security.demo.controllers;
+package ru.kata.spring.boot_security.demo.service;
 
 import java.lang.reflect.Field;
 import java.util.LinkedHashMap;

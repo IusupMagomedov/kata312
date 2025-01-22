@@ -6,7 +6,6 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import ru.kata.spring.boot_security.demo.controllers.ObjectUtils;
 import ru.kata.spring.boot_security.demo.models.User;
 
 import java.util.Map;
@@ -19,16 +18,16 @@ public class UserSessionServiceImpl implements UserSessionService {
     UserService userService;
 
     @Override
-    public Optional<User> getAuthenticatedUser(UserDetails authenticatedUser) {
+    public User getAuthenticatedUser(UserDetails authenticatedUser) {
         if (authenticatedUser == null) {
-            return Optional.empty();
+            return null;
         }
         User user = userService
                     .findByUsername(authenticatedUser.getUsername())
                     .orElseThrow(
                             () -> new UsernameNotFoundException("User not found")
                     );
-        return Optional.of(user);
+        return user;
     }
 
     @Override
@@ -43,6 +42,9 @@ public class UserSessionServiceImpl implements UserSessionService {
 
     @Override
     public boolean isAdmin(Authentication authentication) {
+        if (authentication == null) {
+            return false;
+        }
         Set<String> roles = AuthorityUtils
                 .authorityListToSet(authentication.getAuthorities());
         return roles.contains("ROLE_ADMIN");
@@ -55,6 +57,9 @@ public class UserSessionServiceImpl implements UserSessionService {
 
     @Override
     public boolean isAuthenticated(Authentication authentication) {
+        if (authentication == null) {
+            return false;
+        }
         return authentication.isAuthenticated();
     }
 }

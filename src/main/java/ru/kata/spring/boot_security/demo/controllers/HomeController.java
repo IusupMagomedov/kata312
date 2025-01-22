@@ -23,9 +23,7 @@ public class HomeController {
         model.addAttribute("isAdmin",
                 userSessionService.isAdmin(authentication));
         model.addAttribute("user",
-                userSessionService
-                        .getAuthenticatedUser(authenticatedUser)
-                        .get());
+                userSessionService.getAuthenticatedUser(authenticatedUser));
         return "home";
     }
 
