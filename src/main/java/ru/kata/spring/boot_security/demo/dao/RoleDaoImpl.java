@@ -4,8 +4,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.stereotype.Repository;
 import ru.kata.spring.boot_security.demo.models.Role;
 
@@ -18,7 +16,9 @@ public class RoleDaoImpl implements RoleDao {
 
     @Override
     public Role findByName(String name) {
-        TypedQuery<Role> query = entityManager.createQuery("SELECT r FROM Role r WHERE r.name = :name", Role.class);
+        TypedQuery<Role> query = entityManager
+                .createQuery("SELECT r FROM Role r WHERE r.name = :name",
+                        Role.class);
         query.setParameter("name", name);
         try {
             return query.getSingleResult();
@@ -29,7 +29,9 @@ public class RoleDaoImpl implements RoleDao {
 
     @Override
     public List<Role> findAll() {
-        return entityManager.createQuery("SELECT u FROM Role u", Role.class).getResultList();
+        return entityManager
+                .createQuery("SELECT u FROM Role u", Role.class)
+                .getResultList();
     }
 
     @Override

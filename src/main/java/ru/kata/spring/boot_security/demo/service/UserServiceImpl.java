@@ -41,12 +41,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> getUser(Long id) {
-        return Optional.ofNullable(userDao.findById(id)); //findById(id);
+        return Optional.ofNullable(userDao.findById(id));
     }
 
     @Transactional
     @Override
-    public void createUser(String username, String password, String name, String email, Set<Role> roles) {
+    public void createUser(String username, String password, String name,
+                           String email, Set<Role> roles) {
         String encodedPassword = passwordEncoder.encode(password);
         User user = new User();
         user.setUsername(username);
@@ -60,7 +61,8 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void updateUser(Long id, String username, String password, String name, String email, Set<Role> roles) {
+    public void updateUser(Long id, String username, String password,
+                           String name, String email, Set<Role> roles) {
         User user = userDao.findById(id);
         user.setName(name);
         user.setUsername(username);
@@ -85,7 +87,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username)
+            throws UsernameNotFoundException {
         return userDao.findByUsername(username);
     }
 }

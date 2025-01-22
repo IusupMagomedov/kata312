@@ -20,13 +20,20 @@ public class HomeController {
     private final UserService userService;
 
     @GetMapping("/")
-    public String getHomePage(Model model, @AuthenticationPrincipal UserDetails authenticatedUser, Authentication authentication) {
+    public String getHomePage(Model model,
+                              @AuthenticationPrincipal UserDetails authenticatedUser,
+                              Authentication authentication) {
         if (authenticatedUser == null) {
             model.addAttribute("isAuthenticated", false);
         } else {
             model.addAttribute("isAuthenticated", true);
-            User user = userService.findByUsername(authenticatedUser.getUsername()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-            Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
+            User user = userService
+                    .findByUsername(authenticatedUser.getUsername())
+                    .orElseThrow(
+                            () -> new UsernameNotFoundException("User not found")
+                    );
+            Set<String> roles = AuthorityUtils
+                    .authorityListToSet(authentication.getAuthorities());
             boolean isAdmin = roles.contains("ROLE_ADMIN");
             model.addAttribute("isAdmin", isAdmin);
             model.addAttribute("user", user);
@@ -45,12 +52,20 @@ public class HomeController {
     }
 
     @GetMapping("/user")
-    public String getUserPage(Model model, @AuthenticationPrincipal UserDetails authenticatedUser, Authentication authentication) {
-        User user = userService.findByUsername(authenticatedUser.getUsername()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    public String getUserPage(Model model,
+                              @AuthenticationPrincipal
+                              UserDetails authenticatedUser,
+                              Authentication authentication) {
+        User user = userService
+                .findByUsername(authenticatedUser.getUsername())
+                .orElseThrow(
+                        () -> new UsernameNotFoundException("User not found")
+                );
         model.addAttribute("user", user);
         model.addAttribute("userProperties", ObjectUtils.getObjectProperties(user));
         model.addAttribute("isAuthenticated", true);
-        Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
+        Set<String> roles = AuthorityUtils
+                .authorityListToSet(authentication.getAuthorities());
         boolean isAdmin = roles.contains("ROLE_ADMIN");
         model.addAttribute("isAdmin", isAdmin);
         model.addAttribute("user", user);

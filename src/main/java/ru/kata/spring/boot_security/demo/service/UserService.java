@@ -17,9 +17,11 @@ public interface UserService extends UserDetailsService {
 
     Optional<User> getUser(Long id);
 
-    void createUser(String username, String password, String name, String email, Set<Role> roles);
+    void createUser(String username, String password, String name,
+                    String email, Set<Role> roles);
 
-    void updateUser(Long id, String username, String password, String name, String email, Set<Role> roles);
+    void updateUser(Long id, String username, String password, String name,
+                    String email, Set<Role> roles);
 
     void deleteUser(Long id);
 

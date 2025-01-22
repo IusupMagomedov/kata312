@@ -27,7 +27,8 @@ public class AdminsController {
     private final RoleService roleService;
 
     @GetMapping
-    public String getUsers(@RequestParam(value = "limit", required = false) Integer limit, Model model) {
+    public String getUsers(@RequestParam(value = "limit",
+            required = false) Integer limit, Model model) {
         List<User> users = userService.getUsers(limit);
         List<Role> roles = roleService.getRoles();
         model.addAttribute("users", users);
@@ -36,16 +37,34 @@ public class AdminsController {
     }
 
     @PostMapping("/create")
-    public String addUser(Model model, @RequestParam("name") String name, @RequestParam("username") String username, @RequestParam("email") String email, @RequestParam("password") String password, @RequestParam("roles") String[] roleIds, @AuthenticationPrincipal UserDetails authenticatedUser, Authentication authentication) {
+    public String addUser(Model model, @RequestParam("name") String name,
+                          @RequestParam("username") String username,
+                          @RequestParam("email") String email,
+                          @RequestParam("password") String password,
+                          @RequestParam("roles") String[] roleIds,
+                          @AuthenticationPrincipal UserDetails authenticatedUser,
+                          Authentication authentication) {
 
-        Set<Role> roles = Arrays.stream(roleIds).mapToLong(Long::parseLong).mapToObj(roleService::getRole).filter(Optional::isPresent).map(Optional::get).peek(System.out::println).collect(Collectors.toSet());
+        Set<Role> roles = Arrays
+                .stream(roleIds)
+                .mapToLong(Long::parseLong)
+                .mapToObj(roleService::getRole)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .peek(System.out::println)
+                .collect(Collectors.toSet());
         userService.createUser(username, password, name, email, roles);
         if (authenticatedUser == null) {
             model.addAttribute("isAuthenticated", false);
         } else {
             model.addAttribute("isAuthenticated", true);
-            User user = userService.findByUsername(authenticatedUser.getUsername()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-            Set<String> stringRoles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
+            User user = userService
+                    .findByUsername(authenticatedUser.getUsername())
+                    .orElseThrow(
+                            () -> new UsernameNotFoundException("User not found")
+                    );
+            Set<String> stringRoles = AuthorityUtils
+                    .authorityListToSet(authentication.getAuthorities());
             boolean isAdmin = stringRoles.contains("ROLE_ADMIN");
             model.addAttribute("isAdmin", isAdmin);
             model.addAttribute("user", user);
@@ -56,15 +75,30 @@ public class AdminsController {
     @GetMapping("/update")
     public String updateUser(@RequestParam("id") Long id, Model model) {
         List<Role> roles = roleService.getRoles();
-        User user = userService.getUser(id).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        User user = userService
+                .getUser(id)
+                .orElseThrow(
+                        () -> new UsernameNotFoundException("User not found")
+                );
         model.addAttribute("roles", roles);
         model.addAttribute("user", user);
         return "update";
     }
 
     @PostMapping("/update")
-    public String updateUser(@RequestParam("id") Long id, @RequestParam("username") String username, @RequestParam("password") String password, @RequestParam("name") String name, @RequestParam("email") String email, @RequestParam("roles") String[] roleIds) {
-        Set<Role> roles = Arrays.stream(roleIds).mapToLong(Long::parseLong).mapToObj(roleService::getRole).filter(Optional::isPresent).map(Optional::get).peek(System.out::println).collect(Collectors.toSet());
+    public String updateUser(@RequestParam("id") Long id,
+                             @RequestParam("username") String username,
+                             @RequestParam("password") String password,
+                             @RequestParam("name") String name,
+                             @RequestParam("email") String email,
+                             @RequestParam("roles") String[] roleIds) {
+        Set<Role> roles = Arrays.stream(roleIds)
+                .mapToLong(Long::parseLong)
+                .mapToObj(roleService::getRole)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .peek(System.out::println)
+                .collect(Collectors.toSet());
         userService.updateUser(id, username, password, name, email, roles);
         return "redirect:/admin";
     }

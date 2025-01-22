@@ -17,7 +17,10 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User findByUsername(String username) {
-        TypedQuery<User> query = entityManager.createQuery("SELECT u FROM User u WHERE u.username = :username", User.class);
+        TypedQuery<User> query = entityManager
+                .createQuery("SELECT u FROM User u " +
+                                "WHERE u.username = :username",
+                        User.class);
         query.setParameter("username", username);
         try {
             return query.getSingleResult();
@@ -28,7 +31,9 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<User> findAll() {
-        return entityManager.createQuery("SELECT u FROM User u", User.class).getResultList();
+        return entityManager
+                .createQuery("SELECT u FROM User u", User.class)
+                .getResultList();
     }
 
     @Override
@@ -55,6 +60,8 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void deleteAllUsers() {
-        entityManager.createQuery("DELETE FROM User u").executeUpdate();
+        entityManager
+                .createQuery("DELETE FROM User u")
+                .executeUpdate();
     }
 }
