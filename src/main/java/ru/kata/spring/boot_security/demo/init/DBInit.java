@@ -38,8 +38,12 @@ public class DBInit {
     }
 
     private void setUsers() {
-        Role user = roleService.findByName("ROLE_USER").get();
-        Role admin = roleService.findByName("ROLE_ADMIN").get();
+        Role user = roleService.findByName("ROLE_USER").orElseThrow(
+                () -> new RuntimeException("Role not found")
+        );
+        Role admin = roleService.findByName("ROLE_ADMIN").orElseThrow(
+                () -> new RuntimeException("Role not found")
+        );
         User mario = new User();
         mario.setUsername("mario");
         mario.setPassword("mario");
