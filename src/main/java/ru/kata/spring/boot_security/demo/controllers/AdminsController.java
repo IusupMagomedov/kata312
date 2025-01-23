@@ -1,18 +1,14 @@
 package ru.kata.spring.boot_security.demo.controllers;
 
-
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
-import jakarta.validation.Valid;
-
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -34,45 +30,8 @@ public class AdminsController {
         return "users";
     }
 
-//    @PostMapping("/create")
-//    public String addUser(Model model, @RequestParam("name") String name,
-//                          @RequestParam("username") String username,
-//                          @RequestParam("email") String email,
-//                          @RequestParam("password") String password,
-//                          @RequestParam("roles") String[] roleIds,
-//                          @AuthenticationPrincipal UserDetails authenticatedUser,
-//                          Authentication authentication) {
-//
-//        Set<Role> roles = Arrays
-//                .stream(roleIds)
-//                .mapToLong(Long::parseLong)
-//                .mapToObj(roleService::getRole)
-//                .filter(Optional::isPresent)
-//                .map(Optional::get)
-//                .peek(System.out::println)
-//                .collect(Collectors.toSet());
-//        userService.createUser(username, password, name, email, roles);
-//        if (authenticatedUser == null) {
-//            model.addAttribute("isAuthenticated", false);
-//        } else {
-//            model.addAttribute("isAuthenticated", true);
-//            User user = userService
-//                    .findByUsername(authenticatedUser.getUsername())
-//                    .orElseThrow(
-//                            () -> new UsernameNotFoundException("User not found")
-//                    );
-//            Set<String> stringRoles = AuthorityUtils
-//                    .authorityListToSet(authentication.getAuthorities());
-//            boolean isAdmin = stringRoles.contains("ROLE_ADMIN");
-//            model.addAttribute("isAdmin", isAdmin);
-//            model.addAttribute("user", user);
-//        }
-//        return "redirect:/admin";
-//    }
-
     @PostMapping("/create")
     public String createUser(@ModelAttribute UserDTO userDTO) {
-        String[] roleIds = userDTO.getRoles();
         Set<Role> roles = Arrays
                 .stream(userDTO.getRoles())
                 .mapToLong(Long::parseLong)
@@ -108,20 +67,25 @@ public class AdminsController {
     }
 
     @PostMapping("/update")
-    public String updateUser(@RequestParam("id") Long id,
-                             @RequestParam("username") String username,
-                             @RequestParam("password") String password,
-                             @RequestParam("name") String name,
-                             @RequestParam("email") String email,
-                             @RequestParam("roles") String[] roleIds) {
-        Set<Role> roles = Arrays.stream(roleIds)
+    public String updateUser(@ModelAttribute UserDTO userDTO) {
+        Set<Role> roles = Arrays
+                .stream(userDTO.getRoles())
                 .mapToLong(Long::parseLong)
                 .mapToObj(roleService::getRole)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .peek(System.out::println)
                 .collect(Collectors.toSet());
-        userService.updateUser(id, username, password, name, email, roles);
+
+        User user = new User();
+        user.setId(Long.parseLong(userDTO.getId()));
+        user.setUsername(userDTO.getUsername());
+        user.setPassword(userDTO.getPassword());
+        user.setName(userDTO.getName());
+        user.setEmail(userDTO.getEmail());
+        user.setRoles(roles);
+
+        userService.updateUser(user);
         return "redirect:/admin";
     }
 

@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
 @Service
 @Transactional(readOnly = true)
 @AllArgsConstructor
@@ -54,16 +56,15 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void updateUser(Long id, String username, String password,
-                           String name, String email, Set<Role> roles) {
-        User user = userDao.findById(id);
-        user.setName(name);
-        user.setUsername(username);
-        user.setEmail(email);
-        if (!password.equals(passwordEncoder.encode(user.getPassword()))) {
-            user.setPassword(passwordEncoder.encode(password));
+    public void updateUser(User user) {
+        String oldEncodedPassword = userDao
+                .findById(user.getId())
+                .getPassword();
+        boolean passwordChanged = !oldEncodedPassword
+                .equals(passwordEncoder.encode(user.getPassword()));
+        if (passwordChanged) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
-        user.setRoles(roles);
         userDao.update(user);
     }
 

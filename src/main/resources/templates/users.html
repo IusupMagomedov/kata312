@@ -31,18 +31,23 @@
   <p>Create user</p>
   <form id="form" action="/admin/create" method="post">
     <label for="usernameToCreate">Username:</label>
-    <input type="text" id="usernameToCreate" name="username"><br><br>
+    <input type="text" id="usernameToCreate" name="username" required><br><br>
+
     <label for="passwordToCreate">Password:</label>
-    <input type="password" id="passwordToCreate" name="password"><br><br>
+    <input type="password" id="passwordToCreate" name="password" required><br><br>
+
     <label for="nameToCreate">Name:</label>
-    <input type="text" id="nameToCreate" name="name"><br><br>
+    <input type="text" id="nameToCreate" name="name" required><br><br>
+
     <label for="emailToCreate">Email:</label>
-    <input type="email" id="emailToCreate" name="email"><br><br>
-    <label>Roles</label>
+    <input type="email" id="emailToCreate" name="email" required><br><br>
+
+    <label>Roles:</label>
     <div th:each="role : ${roles}">
-      <input type="checkbox" name="roles" th:value="${role.id}" />
+      <input type="checkbox" name="roles" th:value="${role.id}" th:id="${role.id}" />
       <label th:for="${role.id}" th:text="${role.name}"></label><br/>
     </div>
+
     <input type="submit" id="createButton" value="Create">
   </form>
 
