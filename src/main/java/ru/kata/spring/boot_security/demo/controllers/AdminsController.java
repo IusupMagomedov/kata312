@@ -70,29 +70,26 @@ public class AdminsController {
 //        return "redirect:/admin";
 //    }
 
-    @PostMapping("/admin/create")
-    public String createUser(
-//            @ModelAttribute @Valid User user,
-//            BindingResult result,
-            Model model) {
+    @PostMapping("/create")
+    public String createUser(@ModelAttribute UserDTO userDTO) {
+        String[] roleIds = userDTO.getRoles();
+        Set<Role> roles = Arrays
+                .stream(userDTO.getRoles())
+                .mapToLong(Long::parseLong)
+                .mapToObj(roleService::getRole)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .peek(System.out::println)
+                .collect(Collectors.toSet());
 
-//        if (result.hasErrors()) {
-//            model.addAttribute("roles", roleService.getRoles());
-//            return "createUserForm"; // Return the form view with validation errors
-//        }
+        User user = new User();
+        user.setUsername(userDTO.getUsername());
+        user.setPassword(userDTO.getPassword());
+        user.setName(userDTO.getName());
+        user.setEmail(userDTO.getEmail());
+        user.setRoles(roles);
 
-        // Convert role IDs to Role objects
-//        Set<Role> roles = Arrays.stream(Optional.ofNullable(roleIds).orElse(new String[0]))
-//                .map(roleId -> roleService.getRole(Long.parseLong(roleId))
-//                        .orElseThrow(() -> new IllegalArgumentException("Invalid role ID: " + roleId)))
-//                .collect(Collectors.toSet());
-
-//        // Assign roles to user
-//        user.setRoles(roles);
-
-        // Save user
-//        userService.createUser(user);
-
+        userService.createUser(user);
         return "redirect:/admin";
     }
 
