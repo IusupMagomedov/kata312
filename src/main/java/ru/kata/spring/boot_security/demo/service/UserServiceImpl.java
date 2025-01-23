@@ -46,17 +46,10 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void createUser(String username, String password, String name,
-                           String email, Set<Role> roles) {
-        String encodedPassword = passwordEncoder.encode(password);
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(encodedPassword);
-        user.setName(name);
-        user.setEmail(email);
-        user.setRoles(roles);
-        User savedUser = userDao.save(user);
-        System.out.println("User has been created, id: " + savedUser.getId());
+    public void createUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userDao.save(user);
+        System.out.println("User has been created, id: " + user.getId());
     }
 
     @Transactional

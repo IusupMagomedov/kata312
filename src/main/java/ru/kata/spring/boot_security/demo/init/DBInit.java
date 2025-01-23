@@ -92,13 +92,7 @@ public class DBInit {
         roles.forEach(role -> roleService.createRole(role.getName()));
 
         setUsers();
-        users.forEach(user -> userService.createUser(
-                user.getUsername(),
-                user.getPassword(),
-                user.getName(),
-                user.getEmail(),
-                user.getRoles()
-        ));
+        users.forEach(userService::createUser);
     }
 
     @PreDestroy

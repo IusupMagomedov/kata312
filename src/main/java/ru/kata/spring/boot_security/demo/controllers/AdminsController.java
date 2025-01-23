@@ -2,18 +2,16 @@ package ru.kata.spring.boot_security.demo.controllers;
 
 
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
+import jakarta.validation.Valid;
 
 
 import java.util.*;
@@ -36,41 +34,68 @@ public class AdminsController {
         return "users";
     }
 
-    @PostMapping("/create")
-    public String addUser(Model model, @RequestParam("name") String name,
-                          @RequestParam("username") String username,
-                          @RequestParam("email") String email,
-                          @RequestParam("password") String password,
-                          @RequestParam("roles") String[] roleIds,
-                          @AuthenticationPrincipal UserDetails authenticatedUser,
-                          Authentication authentication) {
+//    @PostMapping("/create")
+//    public String addUser(Model model, @RequestParam("name") String name,
+//                          @RequestParam("username") String username,
+//                          @RequestParam("email") String email,
+//                          @RequestParam("password") String password,
+//                          @RequestParam("roles") String[] roleIds,
+//                          @AuthenticationPrincipal UserDetails authenticatedUser,
+//                          Authentication authentication) {
+//
+//        Set<Role> roles = Arrays
+//                .stream(roleIds)
+//                .mapToLong(Long::parseLong)
+//                .mapToObj(roleService::getRole)
+//                .filter(Optional::isPresent)
+//                .map(Optional::get)
+//                .peek(System.out::println)
+//                .collect(Collectors.toSet());
+//        userService.createUser(username, password, name, email, roles);
+//        if (authenticatedUser == null) {
+//            model.addAttribute("isAuthenticated", false);
+//        } else {
+//            model.addAttribute("isAuthenticated", true);
+//            User user = userService
+//                    .findByUsername(authenticatedUser.getUsername())
+//                    .orElseThrow(
+//                            () -> new UsernameNotFoundException("User not found")
+//                    );
+//            Set<String> stringRoles = AuthorityUtils
+//                    .authorityListToSet(authentication.getAuthorities());
+//            boolean isAdmin = stringRoles.contains("ROLE_ADMIN");
+//            model.addAttribute("isAdmin", isAdmin);
+//            model.addAttribute("user", user);
+//        }
+//        return "redirect:/admin";
+//    }
 
-        Set<Role> roles = Arrays
-                .stream(roleIds)
-                .mapToLong(Long::parseLong)
-                .mapToObj(roleService::getRole)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .peek(System.out::println)
-                .collect(Collectors.toSet());
-        userService.createUser(username, password, name, email, roles);
-        if (authenticatedUser == null) {
-            model.addAttribute("isAuthenticated", false);
-        } else {
-            model.addAttribute("isAuthenticated", true);
-            User user = userService
-                    .findByUsername(authenticatedUser.getUsername())
-                    .orElseThrow(
-                            () -> new UsernameNotFoundException("User not found")
-                    );
-            Set<String> stringRoles = AuthorityUtils
-                    .authorityListToSet(authentication.getAuthorities());
-            boolean isAdmin = stringRoles.contains("ROLE_ADMIN");
-            model.addAttribute("isAdmin", isAdmin);
-            model.addAttribute("user", user);
-        }
+    @PostMapping("/admin/create")
+    public String createUser(
+//            @ModelAttribute @Valid User user,
+//            BindingResult result,
+            Model model) {
+
+//        if (result.hasErrors()) {
+//            model.addAttribute("roles", roleService.getRoles());
+//            return "createUserForm"; // Return the form view with validation errors
+//        }
+
+        // Convert role IDs to Role objects
+//        Set<Role> roles = Arrays.stream(Optional.ofNullable(roleIds).orElse(new String[0]))
+//                .map(roleId -> roleService.getRole(Long.parseLong(roleId))
+//                        .orElseThrow(() -> new IllegalArgumentException("Invalid role ID: " + roleId)))
+//                .collect(Collectors.toSet());
+
+//        // Assign roles to user
+//        user.setRoles(roles);
+
+        // Save user
+//        userService.createUser(user);
+
         return "redirect:/admin";
     }
+
 
     @GetMapping("/update")
     public String updateUser(@RequestParam("id") Long id, Model model) {
