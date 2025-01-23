@@ -37,38 +37,10 @@ public class AdminsController {
     }
 
     @PostMapping("/create")
-    public String addUser(Model model, @RequestParam("name") String name,
-                          @RequestParam("username") String username,
-                          @RequestParam("email") String email,
-                          @RequestParam("password") String password,
-                          @RequestParam("roles") String[] roleIds,
-                          @AuthenticationPrincipal UserDetails authenticatedUser,
-                          Authentication authentication) {
+    public String addUser(@ModelAttribute User user,
+                          @RequestParam String ) {
 
-        Set<Role> roles = Arrays
-                .stream(roleIds)
-                .mapToLong(Long::parseLong)
-                .mapToObj(roleService::getRole)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .peek(System.out::println)
-                .collect(Collectors.toSet());
-        userService.createUser(username, password, name, email, roles);
-        if (authenticatedUser == null) {
-            model.addAttribute("isAuthenticated", false);
-        } else {
-            model.addAttribute("isAuthenticated", true);
-            User user = userService
-                    .findByUsername(authenticatedUser.getUsername())
-                    .orElseThrow(
-                            () -> new UsernameNotFoundException("User not found")
-                    );
-            Set<String> stringRoles = AuthorityUtils
-                    .authorityListToSet(authentication.getAuthorities());
-            boolean isAdmin = stringRoles.contains("ROLE_ADMIN");
-            model.addAttribute("isAdmin", isAdmin);
-            model.addAttribute("user", user);
-        }
+
         return "redirect:/admin";
     }
 
