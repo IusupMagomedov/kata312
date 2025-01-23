@@ -38,7 +38,7 @@ public class AdminsController {
 
     @PostMapping("/create")
     public String addUser(@ModelAttribute User user,
-                          @RequestParam String ) {
+                          @RequestParam String[] roleIds) {
 
 
         return "redirect:/admin";
