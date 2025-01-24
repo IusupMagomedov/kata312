@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/admin")
 @AllArgsConstructor
-public class AdminsController {
+public class AdminController {
     private final UserService userService;
     private final RoleService roleService;
 

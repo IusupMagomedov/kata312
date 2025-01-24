@@ -11,7 +11,7 @@ import java.util.Set;
 public interface UserSessionService {
     User getAuthenticatedUser(UserDetails authenticatedUser);
 
-    Map<String, Object> getUserProperties(UserDetails authenticatedUser);
+//    Map<String, Object> getUserProperties(UserDetails authenticatedUser);
 
     boolean isAdmin(Authentication authentication);
 

@@ -6,13 +6,18 @@
 <body>
     <h1>User's details</h1>
     <table>
+
         <tr>
             <th>Property Name</th>
             <th>Value</th>
         </tr>
-        <tr th:each="entry : ${userProperties}">
-            <td th:text="${entry.key}">Property</td>
-            <td th:text="${entry.value}">Value</td>
+        <tr>
+            <td>Name</td>
+            <td th:text="${user.getName()}">Value</td>
+        </tr>
+        <tr>
+            <td>Email</td>
+            <td th:text="${user.getEmail()}">Value</td>
         </tr>
     </table>
     <p th:if="${isAdmin}"><a href="/admin">To admin's page</a></p>
