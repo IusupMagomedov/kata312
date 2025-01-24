@@ -9,6 +9,8 @@ public interface UserDao {
 
     List<User> findAll();
 
+    List<User> findTopN(Integer limit);
+
     User findById(Long id);
 
     User save(User user);

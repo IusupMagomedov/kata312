@@ -37,6 +37,14 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    public List<User> findTopN(Integer limit) {
+        TypedQuery<User> query = entityManager
+                .createQuery("FROM User u", User.class);
+        query.setMaxResults(limit);
+        return query.getResultList();
+    }
+
+    @Override
     public User findById(Long id) {
         return entityManager.find(User.class, id);
     }

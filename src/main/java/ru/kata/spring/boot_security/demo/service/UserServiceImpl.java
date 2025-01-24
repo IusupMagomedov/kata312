@@ -35,10 +35,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getUsers(Integer limit) {
-//        if (limit != null) {
-//            return userDao.findAll().stream().limit(limit).toList();
-//        }
-        return userDao.findAll();
+        if (limit == null || limit <= 0) {
+            return userDao.findAll();
+        }
+        return userDao.findTopN(limit);
     }
 
     @Override
@@ -83,6 +83,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
-        return userDao.findByUsername(username);
+        try {
+            return userDao.findByUsername(username);
+        } catch (UsernameNotFoundException e) {
+            System.out.println("User not found: " + username);
+        }
+        return null;
     }
 }

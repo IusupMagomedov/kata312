@@ -79,11 +79,19 @@ public class DBInit {
         bowser.setEmail("bowser@gmail.com");
         bowser.setRoles(new HashSet<>(Collections.singleton(user)));
 
+        User birdo = new User();
+        birdo.setUsername("birdo");
+        birdo.setPassword("birdo");
+        birdo.setName("Birdo");
+        birdo.setEmail("birdo@gmail.com");
+        birdo.setRoles(new HashSet<>(Collections.singleton(user)));
+
         users.add(mario);
         users.add(luigi);
         users.add(peach);
         users.add(toad);
         users.add(bowser);
+        users.add(birdo);
     }
 
     @PostConstruct

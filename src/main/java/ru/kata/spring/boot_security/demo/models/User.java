@@ -23,7 +23,7 @@ public class User implements UserDetails {
     private String password;
     private String name;
     private String email;
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
     @Override
