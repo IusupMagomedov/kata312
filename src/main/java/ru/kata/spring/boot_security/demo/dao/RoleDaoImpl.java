@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import ru.kata.spring.boot_security.demo.models.Role;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
@@ -15,15 +16,15 @@ public class RoleDaoImpl implements RoleDao {
     private final EntityManager entityManager;
 
     @Override
-    public Role findByName(String name) {
+    public Optional<Role> findByName(String name) {
         TypedQuery<Role> query = entityManager
                 .createQuery("SELECT r FROM Role r WHERE r.name = :name",
                         Role.class);
         query.setParameter("name", name);
         try {
-            return query.getSingleResult();
+            return Optional.of(query.getSingleResult());
         } catch (NoResultException e) {
-            return null;
+            return Optional.empty();
         }
     }
 

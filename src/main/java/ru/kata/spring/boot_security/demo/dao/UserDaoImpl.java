@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import jakarta.persistence.EntityManager;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
@@ -16,16 +17,16 @@ public class UserDaoImpl implements UserDao {
     private final EntityManager entityManager;
 
     @Override
-    public User findByUsername(String username) {
+    public Optional<User> findByUsername(String username) {
         TypedQuery<User> query = entityManager
                 .createQuery("SELECT u FROM User u " +
                                 "WHERE u.username = :username",
                         User.class);
         query.setParameter("username", username);
         try {
-            return query.getSingleResult();
+            return Optional.of(query.getSingleResult());
         } catch (NoResultException e) {
-            return null;
+            return Optional.empty();
         }
     }
 

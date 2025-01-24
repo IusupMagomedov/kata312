@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> findByUsername(String username) {
-        return Optional.ofNullable(userDao.findByUsername(username));
+        return userDao.findByUsername(username);
     }
 
     @Override
@@ -83,11 +83,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
-        try {
-            return userDao.findByUsername(username);
-        } catch (UsernameNotFoundException e) {
-            System.out.println("User not found: " + username);
-        }
-        return null;
+        return userDao
+                .findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 }

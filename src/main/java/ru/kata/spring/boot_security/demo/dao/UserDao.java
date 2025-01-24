@@ -1,11 +1,12 @@
 package ru.kata.spring.boot_security.demo.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 import ru.kata.spring.boot_security.demo.models.User;
 
 public interface UserDao {
-    User findByUsername(String username);
+    Optional<User> findByUsername(String username);
 
     List<User> findAll();
 

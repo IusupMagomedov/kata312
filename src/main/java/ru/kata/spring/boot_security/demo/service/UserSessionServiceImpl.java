@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.kata.spring.boot_security.demo.models.User;
 
-import java.util.Map;
 import java.util.Set;
 
 @Service
@@ -28,16 +27,6 @@ public class UserSessionServiceImpl implements UserSessionService {
                     );
         return user;
     }
-
-//    @Override
-//    public Map<String, Object> getUserProperties(UserDetails authenticatedUser) {
-//        User user = userService
-//                .findByUsername(authenticatedUser.getUsername())
-//                .orElseThrow(
-//                        () -> new UsernameNotFoundException("User not found")
-//                );
-//        return user;
-//    }
 
     @Override
     public boolean isAdmin(Authentication authentication) {
