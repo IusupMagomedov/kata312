@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
                 .findById(user.getId())
                 .getPassword();
         boolean passwordChanged = !oldEncodedPassword
-                .equals(passwordEncoder.encode(user.getPassword()));
+                .equals(user.getPassword());
         if (passwordChanged) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
