@@ -39,9 +39,13 @@
 <body>
 <!-- Navbar -->
 <nav class="navbar navbar-dark bg-dark">
-        <span class="navbar-text text-white">
-            admin@mail.ru with roles: ADMIN USER
-        </span>
+    <div class="navbar-text text-white">
+        <p>
+            <b th:text="${user.name}"></b>
+            with roles:
+            <span th:text="${user.getStringRoles()}">ADMIN</span>
+        </p>
+    </div>
     <form th:action="@{/logout}" method="post">
         <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
     </form>
@@ -51,27 +55,18 @@
     <!-- Sidebar -->
     <div class="sidebar d-flex flex-column p-3">
         <ul class="nav flex-column">
-            <li class="nav-item">
-                <a href="#" class="nav-link active">Admin</a>
+            <li class="nav-item" th:if="${isAdmin}">
+                <a href="/admin" class="nav-link">Admin</a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link">User</a>
+                <a href="/user" class="nav-link active">User</a>
             </li>
         </ul>
     </div>
 
     <!-- Main Content -->
     <div class="content">
-        <h2>Admin Panel</h2>
-        <ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a class="nav-link active" href="#">Users table</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">New User</a>
-            </li>
-        </ul>
-
+        <h2>About user</h2>
         <div class="mt-3">
             <h5>All users</h5>
             <table class="table table-bordered">
@@ -83,38 +78,16 @@
                     <th>Age</th>
                     <th>Email</th>
                     <th>Role</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
-                    <td>2</td>
-                    <td>admin</td>
-                    <td>admin</td>
-                    <td>35</td>
-                    <td>admin@mail.ru</td>
-                    <td>ADMIN USER</td>
-                    <td class="table-buttons">
-                        <button class="btn btn-sm btn-info">Edit</button>
-                    </td>
-                    <td class="table-buttons">
-                        <button class="btn btn-sm btn-danger">Delete</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>user</td>
-                    <td>user</td>
-                    <td>30</td>
-                    <td>user@mail.ru</td>
-                    <td>USER</td>
-                    <td class="table-buttons">
-                        <button class="btn btn-sm btn-info">Edit</button>
-                    </td>
-                    <td class="table-buttons">
-                        <button class="btn btn-sm btn-danger">Delete</button>
-                    </td>
+                    <td th:text="${user.getId()}">1</td>
+                    <td th:text="${user.getName()}">Mario</td>
+                    <td th:text="${user.getLastName()}">Bros</td>
+                    <td th:text="${user.getAge()}">35</td>
+                    <td th:text="${user.getEmail()}">admin@mail.ru</td>
+                    <td th:text="${user.getStringRoles()}">ADMIN USER</td>
                 </tr>
                 </tbody>
             </table>
@@ -125,33 +98,5 @@
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-</body>
-</html>
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-<head>
-    <title>Spring Security Example</title>
-</head>
-<body>
-    <h1>User's details</h1>
-    <table>
-
-        <tr>
-            <th>Property Name</th>
-            <th>Value</th>
-        </tr>
-        <tr>
-            <td>Name</td>
-            <td th:text="${user.getName()}">Value</td>
-        </tr>
-        <tr>
-            <td>Email</td>
-            <td th:text="${user.getEmail()}">Value</td>
-        </tr>
-    </table>
-    <p th:if="${isAdmin}"><a href="/admin">To admin's page</a></p>
-    <form th:action="@{/logout}" method="post">
-        <button type="submit">Logout</button>
-    </form>
 </body>
 </html>
