@@ -44,10 +44,13 @@ public class DBInit {
         Role admin = roleService.findByName("ROLE_ADMIN").orElseThrow(
                 () -> new RuntimeException("Role not found")
         );
+
         User mario = new User();
         mario.setUsername("mario");
         mario.setPassword("mario");
         mario.setName("Mario");
+        mario.setLastName("Rossi");
+        mario.setAge(35);
         mario.setEmail("mario@gmail.com");
         mario.setRoles(new HashSet<>(Arrays.asList(user, admin)));
 
@@ -55,6 +58,8 @@ public class DBInit {
         luigi.setUsername("luigi");
         luigi.setPassword("luigi");
         luigi.setName("Luigi");
+        luigi.setLastName("Verdi");
+        luigi.setAge(30);
         luigi.setEmail("luigi@gmail.com");
         luigi.setRoles(new HashSet<>(Collections.singleton(user)));
 
@@ -62,6 +67,8 @@ public class DBInit {
         peach.setUsername("peach");
         peach.setPassword("peach");
         peach.setName("Peach");
+        peach.setLastName("Bianchi");
+        peach.setAge(28);
         peach.setEmail("peach@gmail.com");
         peach.setRoles(new HashSet<>(Collections.singleton(user)));
 
@@ -69,6 +76,8 @@ public class DBInit {
         toad.setUsername("toad");
         toad.setPassword("toad");
         toad.setName("Toad");
+        toad.setLastName("Fungi");
+        toad.setAge(25);
         toad.setEmail("toad@gmail.com");
         toad.setRoles(new HashSet<>(Collections.singleton(user)));
 
@@ -76,6 +85,8 @@ public class DBInit {
         bowser.setUsername("bowser");
         bowser.setPassword("bowser");
         bowser.setName("Bowser");
+        bowser.setLastName("Koopa");
+        bowser.setAge(40);
         bowser.setEmail("bowser@gmail.com");
         bowser.setRoles(new HashSet<>(Collections.singleton(user)));
 
@@ -83,8 +94,11 @@ public class DBInit {
         birdo.setUsername("birdo");
         birdo.setPassword("birdo");
         birdo.setName("Birdo");
+        birdo.setLastName("Pink");
+        birdo.setAge(29);
         birdo.setEmail("birdo@gmail.com");
         birdo.setRoles(new HashSet<>(Collections.singleton(user)));
+
 
         users.add(mario);
         users.add(luigi);

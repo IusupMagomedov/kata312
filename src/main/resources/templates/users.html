@@ -2,57 +2,118 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Users</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      margin: 0;
+    }
+    .navbar {
+      width: 100%;
+    }
+    .main-container {
+      display: flex;
+      flex-grow: 1;
+    }
+    .sidebar {
+      width: 200px;
+      background-color: #f8f9fa;
+    }
+    .sidebar .nav-link.active {
+      background-color: #007bff;
+      color: white;
+    }
+    .content {
+      flex-grow: 1;
+      padding: 20px;
+    }
+    .table-buttons button {
+      margin-right: 5px;
+    }
+  </style>
 </head>
 <body>
-<form th:action="@{/logout}" method="post">
-  <button type="submit">Logout</button>
-</form>
-<table>
-  <thead>
-  <th>Name</th>
-  <th>Email</th>
-  <th>Delete</th>
-  <th>Update</th>
-  </thead>
-  <tbody id="tbody">
-  <tr th:each="user : ${users}" th:id="${user.id}">
-    <td th:text="${user.name}"></td>
-    <td th:text="${user.email}"></td>
-    <td>
-      <form action="/admin/delete" method="post">
-        <input type="hidden" name="id" th:value="${user.id}">
-        <input type="submit" value="Delete">
-      </form>
-    </td>
-    <td><a th:href="@{'/admin/update?id=' + ${user.id}}">Update</a></td>
-  </tr>
-  </tbody>
-  <p>Create user</p>
-  <form id="form" action="/admin/create" method="post">
-    <label for="usernameToCreate">Username:</label>
-    <input type="text" id="usernameToCreate" name="username" required><br><br>
-
-    <label for="passwordToCreate">Password:</label>
-    <input type="password" id="passwordToCreate" name="password" required><br><br>
-
-    <label for="nameToCreate">Name:</label>
-    <input type="text" id="nameToCreate" name="name" required><br><br>
-
-    <label for="emailToCreate">Email:</label>
-    <input type="email" id="emailToCreate" name="email" required><br><br>
-
-    <label>Roles:</label>
-    <div th:each="role : ${roles}">
-      <input type="checkbox" name="roles" th:value="${role.id}" th:id="${role.id}" />
-      <label th:for="${role.id}" th:text="${role.name}"></label><br/>
-    </div>
-
-    <input type="submit" id="createButton" value="Create">
+<!-- Navbar -->
+<nav class="navbar navbar-dark bg-dark">
+  <div class="navbar-text text-white">
+    <p>
+      <b th:text="${user.name}"></b>
+      with roles:
+      <span th:text="${user.getStringRoles()}">ADMIN</span>
+    </p>
+  </div>
+  <form th:action="@{/logout}" method="post">
+    <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
   </form>
+</nav>
 
+<div class="main-container">
+  <!-- Sidebar -->
+  <div class="sidebar d-flex flex-column p-3">
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a href="/admin" class="nav-link active">Admin</a>
+      </li>
+      <li class="nav-item">
+        <a href="/user" class="nav-link">User</a>
+      </li>
+    </ul>
+  </div>
 
-</table>
+  <!-- Main Content -->
+  <div class="content">
+    <h2>Admin Panel</h2>
+    <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a class="nav-link active" href="/admin">Users table</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">New User</a>
+      </li>
+    </ul>
 
+    <div class="mt-3">
+      <h5>All users</h5>
+      <table class="table table-bordered">
+        <thead class="thead-light">
+        <tr>
+          <th>ID</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Age</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Edit</th>
+          <th>Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}"  th:id="${user.id}">
+          <td th:text="${user.getId()}">1</td>
+          <td th:text="${user.getName()}">Mario</td>
+          <td th:text="${user.getLastName()}">Bros</td>
+          <td th:text="${user.getAge()}">35</td>
+          <td th:text="${user.getEmail()}">admin@mail.ru</td>
+          <td th:text="${user.getStringRoles()}">ADMIN USER</td>
+          <td class="table-buttons">
+            <button onclick="ubdateHandler" class="btn btn-sm btn-info">Edit</button>
+          </td>
+          <td class="table-buttons">
+            <button onclick="deleteHandler" class="btn btn-sm btn-danger">Delete</button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 </html>

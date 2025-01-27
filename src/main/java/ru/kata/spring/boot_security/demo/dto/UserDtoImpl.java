@@ -10,6 +10,8 @@ public class UserDtoImpl implements UserDto {
     private String username;
     private String password;
     private String name;
+    private String lastName;
+    private String age;
     private String email;
     private String[] roles;
 }
