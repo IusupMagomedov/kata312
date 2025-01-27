@@ -10,9 +10,9 @@ import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
+import ru.kata.spring.boot_security.demo.utils.UserMapper;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 public class AdminController {
     private final UserService userService;
     private final RoleService roleService;
+    private final UserMapper userMapper;
 
     @GetMapping
     public String getUsers(@RequestParam(value = "limit",
@@ -33,22 +34,7 @@ public class AdminController {
 
     @PostMapping("/create")
     public String createUser(@ModelAttribute UserDtoImpl userDtoImpl) {
-        Set<Role> roles = Arrays
-                .stream(userDtoImpl.getRoles())
-                .mapToLong(Long::parseLong)
-                .mapToObj(roleService::getRole)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .peek(System.out::println)
-                .collect(Collectors.toSet());
-
-        User user = new User();
-        user.setUsername(userDtoImpl.getUsername());
-        user.setPassword(userDtoImpl.getPassword());
-        user.setName(userDtoImpl.getName());
-        user.setEmail(userDtoImpl.getEmail());
-        user.setRoles(roles);
-
+        User user = userMapper.toUser(userDtoImpl);
         userService.createUser(user);
         return "redirect:/admin";
     }
@@ -69,23 +55,7 @@ public class AdminController {
 
     @PostMapping("/update")
     public String updateUser(@ModelAttribute UserDtoImpl userDtoImpl) {
-        Set<Role> roles = Arrays
-                .stream(userDtoImpl.getRoles())
-                .mapToLong(Long::parseLong)
-                .mapToObj(roleService::getRole)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .peek(System.out::println)
-                .collect(Collectors.toSet());
-
-        User user = new User();
-        user.setId(Long.parseLong(userDtoImpl.getId()));
-        user.setUsername(userDtoImpl.getUsername());
-        user.setPassword(userDtoImpl.getPassword());
-        user.setName(userDtoImpl.getName());
-        user.setEmail(userDtoImpl.getEmail());
-        user.setRoles(roles);
-
+        User user = userMapper.toUserWithId(userDtoImpl);
         userService.updateUser(user);
         return "redirect:/admin";
     }
