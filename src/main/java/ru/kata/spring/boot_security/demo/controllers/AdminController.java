@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.dto.UserDtoImpl;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
@@ -31,9 +32,9 @@ public class AdminController {
     }
 
     @PostMapping("/create")
-    public String createUser(@ModelAttribute UserDTO userDTO) {
+    public String createUser(@ModelAttribute UserDtoImpl userDtoImpl) {
         Set<Role> roles = Arrays
-                .stream(userDTO.getRoles())
+                .stream(userDtoImpl.getRoles())
                 .mapToLong(Long::parseLong)
                 .mapToObj(roleService::getRole)
                 .filter(Optional::isPresent)
@@ -42,10 +43,10 @@ public class AdminController {
                 .collect(Collectors.toSet());
 
         User user = new User();
-        user.setUsername(userDTO.getUsername());
-        user.setPassword(userDTO.getPassword());
-        user.setName(userDTO.getName());
-        user.setEmail(userDTO.getEmail());
+        user.setUsername(userDtoImpl.getUsername());
+        user.setPassword(userDtoImpl.getPassword());
+        user.setName(userDtoImpl.getName());
+        user.setEmail(userDtoImpl.getEmail());
         user.setRoles(roles);
 
         userService.createUser(user);
@@ -67,9 +68,9 @@ public class AdminController {
     }
 
     @PostMapping("/update")
-    public String updateUser(@ModelAttribute UserDTO userDTO) {
+    public String updateUser(@ModelAttribute UserDtoImpl userDtoImpl) {
         Set<Role> roles = Arrays
-                .stream(userDTO.getRoles())
+                .stream(userDtoImpl.getRoles())
                 .mapToLong(Long::parseLong)
                 .mapToObj(roleService::getRole)
                 .filter(Optional::isPresent)
@@ -78,11 +79,11 @@ public class AdminController {
                 .collect(Collectors.toSet());
 
         User user = new User();
-        user.setId(Long.parseLong(userDTO.getId()));
-        user.setUsername(userDTO.getUsername());
-        user.setPassword(userDTO.getPassword());
-        user.setName(userDTO.getName());
-        user.setEmail(userDTO.getEmail());
+        user.setId(Long.parseLong(userDtoImpl.getId()));
+        user.setUsername(userDtoImpl.getUsername());
+        user.setPassword(userDtoImpl.getPassword());
+        user.setName(userDtoImpl.getName());
+        user.setEmail(userDtoImpl.getEmail());
         user.setRoles(roles);
 
         userService.updateUser(user);
