@@ -5,7 +5,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -46,6 +45,22 @@ public class AdminController {
         model.addAttribute("user",
                 userSessionService.getAuthenticatedUser(authenticatedUser));
         return "users";
+    }
+
+    @GetMapping("/create")
+    public String getCreateUserPage(Model model,
+            @AuthenticationPrincipal UserDetails authenticatedUser,
+            Authentication authentication) {
+        List<Role> roles = roleService.getRoles();
+
+        model.addAttribute("roles", roles);
+        model.addAttribute("isAuthenticated",
+                userSessionService.isAuthenticated(authentication));
+        model.addAttribute("isAdmin",
+                userSessionService.isAdmin(authentication));
+        model.addAttribute("user",
+                userSessionService.getAuthenticatedUser(authenticatedUser));
+        return "create";
     }
 
     @PostMapping("/create")

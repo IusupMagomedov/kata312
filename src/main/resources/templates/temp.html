@@ -5,46 +5,44 @@
     <title>Title</title>
 </head>
 <body>
-<table>
-    <thead>
-    <th>Name</th>
-    <th>Email</th>
-    <th>Delete</th>
-    <th>Update</th>
-    </thead>
-    <tbody id="tbody">
-    <tr th:each="user : ${users}" th:id="${user.id}">
-        <td th:text="${user.name}"></td>
-        <td th:text="${user.email}"></td>
-        <td>
-            <form action="/admin/delete" method="post">
-                <input type="hidden" name="id" th:value="${user.id}">
-                <input type="submit" value="Delete">
-            </form>
-        </td>
-        <td><a th:href="@{'/admin/update?id=' + ${user.id}}">Update</a></td>
-    </tr>
-    </tbody>
-    <p>Create user</p>
-    <form id="form" action="/admin/create" method="post">
-        <label for="usernameToCreate">Username:</label>
-        <input type="text" id="usernameToCreate" name="username" required><br><br>
+<th>Name</th>
+<th>Email</th>
+<th>Delete</th>
+<th>Update</th>
+</thead>
+<tbody id="tbody">
+<tr th:each="user : ${users}" th:id="${user.id}">
+    <td th:text="${user.name}"></td>
+    <td th:text="${user.email}"></td>
+    <td>
+        <form action="/admin/delete" method="post">
+            <input type="hidden" name="id" th:value="${user.id}">
+            <input type="submit" value="Delete">
+        </form>
+    </td>
+    <td><a th:href="@{'/admin/update?id=' + ${user.id}}">Update</a></td>
+</tr>
+</tbody>
+<p>Create user</p>
+<form id="form" action="/admin/create" method="post">
+    <label for="usernameToCreate">Username:</label>
+    <input type="text" id="usernameToCreate" name="username" required><br><br>
 
-        <label for="passwordToCreate">Password:</label>
-        <input type="password" id="passwordToCreate" name="password" required><br><br>
+    <label for="passwordToCreate">Password:</label>
+    <input type="password" id="passwordToCreate" name="password" required><br><br>
 
-        <label for="nameToCreate">Name:</label>
-        <input type="text" id="nameToCreate" name="name" required><br><br>
+    <label for="nameToCreate">Name:</label>
+    <input type="text" id="nameToCreate" name="name" required><br><br>
 
-        <label for="emailToCreate">Email:</label>
-        <input type="email" id="emailToCreate" name="email" required><br><br>
+    <label for="emailToCreate">Email:</label>
+    <input type="email" id="emailToCreate" name="email" required><br><br>
 
-        <label>Roles:</label>
-        <div th:each="role : ${roles}">
-            <input type="checkbox" name="roles" th:value="${role.id}" th:id="${role.id}" />
-            <label th:for="${role.id}" th:text="${role.name}"></label><br/>
-        </div>
-        <input type="submit" id="createButton" value="Create">
-    </form>
+    <label>Roles:</label>
+    <div th:each="role : ${roles}">
+        <input type="checkbox" name="roles" th:value="${role.id}" th:id="${role.id}"/>
+        <label th:for="${role.id}" th:text="${role.name}"></label><br/>
+    </div>
+    <input type="submit" id="createButton" value="Create">
+</form>
 </body>
 </html>

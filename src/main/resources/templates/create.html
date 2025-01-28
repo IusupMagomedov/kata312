@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .navbar {
+            width: 100%;
+        }
+
+        .main-container {
+            display: flex;
+            flex-grow: 1;
+        }
+
+        .sidebar {
+            width: 200px;
+            background-color: #f8f9fa;
+        }
+
+        .sidebar .nav-link.active {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        .table-buttons button {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-dark bg-dark">
+    <div class="navbar-text text-white">
+        <p>
+            <b th:text="${user.name}"></b>
+            with roles:
+            <span th:text="${user.getStringRoles()}">ADMIN</span>
+        </p>
+    </div>
+    <form th:action="@{/logout}" method="post">
+        <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
+    </form>
+</nav>
+<div class="main-container">
+    <!-- Sidebar -->
+    <div class="sidebar d-flex flex-column p-3">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a href="/admin" class="nav-link active">Admin</a>
+            </li>
+            <li class="nav-item">
+                <a href="/user" class="nav-link">User</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <h2>Admin Panel</h2>
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link" href="/admin">Users table</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="/admin/create">New User</a>
+            </li>
+        </ul>
+        <div class="mt-3">
+            <h6>Add new user</h6>
+            <div class="container-fluid p-4 d-flex justify-content-center">
+                <div class="card card-container">
+                    <div class="card-body">
+                        <form class="justify-content-center" id="form" action="/admin/create" method="post">
+                            <label class="form-label">Username</label>
+                            <input type="text" class="form-control text-dark" name="username" value="yoshi">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control" value="yoshi" name="password" >
+                            <label class="form-label">First name</label>
+                            <input type="text" class="form-control text-dark" value="Yoshi" name="name" required>
+                            <label class="form-label">Last name</label>
+                            <input type="text" class="form-control text-dark" value="Dino" name="lastname" >
+                            <label class="form-label">Age</label>
+                            <input type="number" class="form-control" value="27" name="age" >
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control text-dark" value="yoshi@gmail.com" name="email" >
+                            <div th:each="role : ${roles}">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="roles" th:value="${role.id}" th:id="${role.id}">
+                                    <label class="form-check-label" th:for="${role.id}" th:text="${role.name}">ADMIN</label>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-success w-100">Add new user</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
