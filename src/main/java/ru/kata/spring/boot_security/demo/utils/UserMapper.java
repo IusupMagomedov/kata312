@@ -20,6 +20,8 @@ public class UserMapper {
         user.setUsername(userDtoImpl.getUsername());
         user.setPassword(userDtoImpl.getPassword());
         user.setName(userDtoImpl.getName());
+        user.setLastName(userDtoImpl.getLastName());
+        user.setAge(Integer.parseInt(userDtoImpl.getAge()));
         user.setEmail(userDtoImpl.getEmail());
         user.setRoles(roles);
 
