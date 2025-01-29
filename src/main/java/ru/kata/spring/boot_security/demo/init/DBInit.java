@@ -45,67 +45,67 @@ public class DBInit {
                 () -> new RuntimeException("Role not found")
         );
 
-        User mario = new User();
-        mario.setUsername("mario");
-        mario.setPassword("mario");
-        mario.setName("Mario");
-        mario.setLastName("Rossi");
-        mario.setAge(35);
-        mario.setEmail("mario@gmail.com");
-        mario.setRoles(new HashSet<>(Arrays.asList(user, admin)));
+        User mario = User.builder()
+                .username("mario")
+                .password("mario")
+                .name("Mario")
+                .lastName("Rossi")
+                .age(35)
+                .email("mario@gmail.com")
+                .roles(new HashSet<>(Arrays.asList(user, admin)))
+                .build();
 
-        User luigi = new User();
-        luigi.setUsername("luigi");
-        luigi.setPassword("luigi");
-        luigi.setName("Luigi");
-        luigi.setLastName("Verdi");
-        luigi.setAge(30);
-        luigi.setEmail("luigi@gmail.com");
-        luigi.setRoles(new HashSet<>(Collections.singleton(user)));
+        User luigi = User.builder()
+                .username("luigi")
+                .password("luigi")
+                .name("Luigi")
+                .lastName("Verdi")
+                .age(30)
+                .email("luigi@gmail.com")
+                .roles(new HashSet<>(Collections.singleton(user)))
+                .build();
 
-        User peach = new User();
-        peach.setUsername("peach");
-        peach.setPassword("peach");
-        peach.setName("Peach");
-        peach.setLastName("Bianchi");
-        peach.setAge(28);
-        peach.setEmail("peach@gmail.com");
-        peach.setRoles(new HashSet<>(Collections.singleton(user)));
+        User peach = User.builder()
+                .username("peach")
+                .password("peach")
+                .name("Peach")
+                .lastName("Bianchi")
+                .age(28)
+                .email("peach@gmail.com")
+                .roles(new HashSet<>(Collections.singleton(user)))
+                .build();
 
-        User toad = new User();
-        toad.setUsername("toad");
-        toad.setPassword("toad");
-        toad.setName("Toad");
-        toad.setLastName("Fungi");
-        toad.setAge(25);
-        toad.setEmail("toad@gmail.com");
-        toad.setRoles(new HashSet<>(Collections.singleton(user)));
+        User toad = User.builder()
+                .username("toad")
+                .password("toad")
+                .name("Toad")
+                .lastName("Fungi")
+                .age(25)
+                .email("toad@gmail.com")
+                .roles(new HashSet<>(Collections.singleton(user)))
+                .build();
 
-        User bowser = new User();
-        bowser.setUsername("bowser");
-        bowser.setPassword("bowser");
-        bowser.setName("Bowser");
-        bowser.setLastName("Koopa");
-        bowser.setAge(40);
-        bowser.setEmail("bowser@gmail.com");
-        bowser.setRoles(new HashSet<>(Collections.singleton(user)));
+        User bowser = User.builder()
+                .username("bowser")
+                .password("bowser")
+                .name("Bowser")
+                .lastName("Koopa")
+                .age(40)
+                .email("bowser@gmail.com")
+                .roles(new HashSet<>(Collections.singleton(user)))
+                .build();
 
-        User birdo = new User();
-        birdo.setUsername("birdo");
-        birdo.setPassword("birdo");
-        birdo.setName("Birdo");
-        birdo.setLastName("Pink");
-        birdo.setAge(29);
-        birdo.setEmail("birdo@gmail.com");
-        birdo.setRoles(new HashSet<>(Collections.singleton(user)));
+        User birdo = User.builder()
+                .username("birdo")
+                .password("birdo")
+                .name("Birdo")
+                .lastName("Pink")
+                .age(29)
+                .email("birdo@gmail.com")
+                .roles(new HashSet<>(Collections.singleton(user)))
+                .build();
 
-
-        users.add(mario);
-        users.add(luigi);
-        users.add(peach);
-        users.add(toad);
-        users.add(bowser);
-        users.add(birdo);
+        users.addAll(Arrays.asList(mario, luigi, peach, toad, bowser, birdo));
     }
 
     @PostConstruct
