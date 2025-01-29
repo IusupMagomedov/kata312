@@ -33,9 +33,10 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(
                         auth -> auth
+                                .requestMatchers("/admin/health-check").permitAll()
                                 .requestMatchers("/user")
                                 .hasRole("USER")
-                                .requestMatchers("/user", "/admin/**")
+                                .requestMatchers("/user", "/admin/**", "/api/admin/**")
                                 .hasRole("ADMIN")
                                 .anyRequest().authenticated())
                 .formLogin(
@@ -46,7 +47,7 @@ public class SecurityConfig {
                 .logout(
                         logout -> logout
                                 .logoutUrl("/logout")
-                                .logoutSuccessUrl("/"))
+                                .logoutSuccessUrl("/login"))
                 .csrf(AbstractHttpConfigurer::disable);
 
         return http.build();
