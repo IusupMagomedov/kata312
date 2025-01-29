@@ -13,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.configurers
         .AbstractHttpConfigurer;
-import ru.kata.spring.boot_security.demo.controllers.LoginController;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 @Configuration
@@ -28,15 +27,17 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, LoginController loginController)
+    public SecurityFilterChain securityFilterChain(HttpSecurity http)
             throws Exception {
         http
                 .authorizeHttpRequests(
                         auth -> auth
-                                .requestMatchers("/admin/health-check").permitAll()
-                                .requestMatchers("/user")
+                                .requestMatchers("/admin/health-check")
+                                        .permitAll()
+                                .requestMatchers("/user", "/api/user")
                                 .hasRole("USER")
-                                .requestMatchers("/user", "/admin/**", "/api/admin/**")
+                                .requestMatchers("/user", "/admin/**",
+                                        "/api/admin/**", "/api/user")
                                 .hasRole("ADMIN")
                                 .anyRequest().authenticated())
                 .formLogin(
