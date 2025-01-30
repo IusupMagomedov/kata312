@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "ES6", // or "ES2015" or higher
+    "module": "commonjs", // or "ESNext" depending on your needs
+    "lib": ["ES2015", "DOM"], // Include ES2015 for Promises and DOM for browser APIs
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "../static/js"
+  }
+}
