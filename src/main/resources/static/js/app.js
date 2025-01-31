@@ -30,6 +30,31 @@ function fetchUsers() {
         }
     });
 }
+function deleteUser(id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            // @ts-ignore
+            event.preventDefault();
+            const response = yield fetch('http://localhost:8080/api/admin/delete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                    // Add any additional headers (e.g., authorization token) if needed
+                },
+                body: JSON.stringify(id)
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            displayUsers();
+            return "User was deleted";
+        }
+        catch (error) {
+            console.error('Error fetching users:', error);
+            throw error;
+        }
+    });
+}
 function displayUsers() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -39,7 +64,9 @@ function displayUsers() {
             const container = document.getElementById('users-table-container');
             if (container) {
                 // Create a table element
-                const table = document.getElementById('users-table');
+                let table = document.getElementById('users-table');
+                // @ts-ignore
+                table.innerHTML = ``;
                 // Create table rows for each user
                 users.forEach(user => {
                     const row = document.createElement('tr');
@@ -65,7 +92,13 @@ function displayUsers() {
         <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#editUserModal${user.id}">
             Edit
         </button>
-        <div class="modal fade" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true" id="editUserModal${user.id}">
+        <div
+                class="modal fade"
+                id="editUserModal${user.id}"
+                tabindex="-1"
+                aria-labelledby="editUserModalLabel"
+                aria-hidden="true"
+        >
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -75,7 +108,7 @@ function displayUsers() {
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form action="/admin/update" method="post">
+                        <form>
                             <input type="hidden" name="id" value="${user.id}">
                             <div class="form-group">
                                 <label>First Name</label>
@@ -108,25 +141,98 @@ function displayUsers() {
                     const deleteTd = document.createElement('td');
                     deleteTd.classList.add('table-buttons');
                     deleteTd.innerHTML = `
-        <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteUserModal${user.id}">
+        <button 
+            type="button" 
+            class="btn btn-sm btn-danger" 
+            data-toggle="modal" 
+            data-target="#deleteUserModal${user.id}">
             Delete
         </button>
-        <div class="modal fade" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true" id="deleteUserModal${user.id}">
+        <div
+            class="modal fade"
+            id="deleteUserModal${user.id}"
+            tabindex="-1"
+            aria-labelledby="editUserModalLabel"
+            aria-hidden="true"
+        >
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Delete User</h5>
+                        <h5 class="modal-title" id="deleteUserModalLabel">Delete User?</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
+                            <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form action="/admin/delete" method="post">
-                            <input type="hidden" name="id" value="${user.id}">
-                            <p>Are you sure you want to delete user ${user.name}?</p>
+                        <form>
+                            <div class="form-group">
+                                <label>ID</label>
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        name="id"
+                                        readonly
+                                        value="${user.id}"
+                                >
+                            
+                            </div>
+                            <div class="form-group">
+                                <label>First Name</label>
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        readonly
+                                        value="${user.username}"
+                                >
+                            </div>
+                            <div class="form-group">
+                                <label>First Name</label>
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        readonly
+                                        value="${user.name}"
+                                >
+                            </div>
+                            <div class="form-group">
+                                <label>Last Name</label>
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        readonly
+                                        value="${user.lastName}"
+                                >
+                            </div>
+                            <div class="form-group">
+                                <label>Age</label>
+                                <input
+                                        type="number"
+                                        class="form-control"
+                                        readonly
+                                        value="${user.age}"
+                                >
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input
+                                        type="email"
+                                        class="form-control"
+                                        readonly
+                                        value="${user.email}"
+                                >
+                            </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <input type="submit" class="btn btn-danger" value="Delete">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                    Close
+                                </button>
+                                <button
+                                        class="btn btn-primary"
+                                        value="Delete"
+                                        data-dismiss="modal"
+                                        onclick="deleteUser(${user.id})"
+                                >
+                                    Delete
+                                </button>
                             </div>
                         </form>
                     </div>

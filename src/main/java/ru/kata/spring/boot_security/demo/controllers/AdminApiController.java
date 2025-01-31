@@ -40,7 +40,7 @@ public class AdminApiController {
     }
 
     @PostMapping("/delete")
-    public void deleteUser(@RequestBody User user) {
-        userService.deleteUser(user.getId());
+    public void deleteUser(@RequestBody String id) {
+        userService.deleteUser(Long.valueOf(id));
     }
 }
