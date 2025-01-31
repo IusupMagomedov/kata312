@@ -43,6 +43,32 @@ async function fetchUsers(): Promise<User[]> {
     }
 }
 
+async function fetchRoles(): Promise<Role[]> {
+    try {
+        const response = await fetch('http://localhost:8080/api/admin/roles', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                // Add any additional headers (e.g., authorization token) if needed
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const roles: Role[] = await response.json();
+        return roles;
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        throw error;
+    }
+}
+
+function inputChangeHandler() {
+
+}
+
 async function deleteUser(id: number): Promise<String> {
     try {
         // @ts-ignore
@@ -68,10 +94,55 @@ async function deleteUser(id: number): Promise<String> {
     }
 }
 
+async function updateUser(userId: number): Promise<String> {
+    try {
+        // @ts-ignore
+        event.preventDefault();
+
+        // @ts-ignore
+        const form:HTMLFormElement = document.getElementById("editUserForm" + userId);
+
+
+
+
+        const updatedUser = {
+            id: 6,//userId,
+            name: "Birdo",//form.name.value,
+            lastName: "Pink",//form.lastName.value,
+            age: 25,//form.age.value,
+            email: "birdo@mail.com"//form.email.value
+        };
+
+        const response = await fetch('http://localhost:8080/api/admin/update', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+                // Add any additional headers (e.g., authorization token) if needed
+            },
+            body: JSON.stringify(updatedUser)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        displayUsers();
+        return "User was updated";
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        throw error;
+    }
+}
+
 async function displayUsers() {
     try {
         const users = await fetchUsers();
         console.log('Fetched users:', users);
+
+
+        const roles = await fetchRoles();
+        console.log('Fetched roles:', roles)
+
 
         // Get the container element
         const container = document.getElementById('users-table-container');
@@ -106,6 +177,18 @@ async function displayUsers() {
                 // Edit button and modal
                 const editTd = document.createElement('td');
                 editTd.classList.add('table-buttons');
+                const rolesBlock :HTMLElement = document.createElement('div');
+
+
+                roles.forEach(role => {
+                    const div = document.createElement()
+                });
+
+                // <div th:each="role : ${roles}">
+                // <input type="checkbox" name="roles" th:value="${role.id}"/>
+                //     <label th:for="${role.id}" th:text="${role.name}"></label><br/>
+                //     </div>
+
                 editTd.innerHTML = `
         <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#editUserModal${user.id}">
             Edit
@@ -126,11 +209,36 @@ async function displayUsers() {
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form>
+                        <form
+                            id="editUserForm${user.id}"
+                        >
                             <input type="hidden" name="id" value="${user.id}">
                             <div class="form-group">
+                                <label>Username</label>
+                                <input 
+                                    value="${user.username}" 
+                                    type="text" 
+                                    class="form-control" 
+                                    name="username"
+                                >
+                            </div>
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input 
+                                    value="${user.password}" 
+                                    type="password" 
+                                    class="form-control" 
+                                    name="password"
+                                >
+                            </div>
+                            <div class="form-group">
                                 <label>First Name</label>
-                                <input value="${user.name}" type="text" class="form-control" name="name">
+                                <input 
+                                    value="${user.name}" 
+                                    type="text" 
+                                    class="form-control" 
+                                    name="name"
+                                >
                             </div>
                             <div class="form-group">
                                 <label>Last Name</label>
@@ -142,11 +250,25 @@ async function displayUsers() {
                             </div>
                             <div class="form-group">
                                 <label>Email</label>
-                                <input value="${user.email}" type="email" class="form-control" name="email">
+                                <input 
+                                    value="${user.email}" 
+                                    type="email" 
+                                    class="form-control" 
+                                    name="email"
+                                    onchange=""
+                                >
                             </div>
+                            <label>Roles</label>
+                            ${rolesBlock}
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <input type="submit" class="btn btn-primary" value="Update">
+                                <button
+                                        class="btn btn-primary"
+                                        data-dismiss="modal"
+                                        onclick="updateUser(${user.id})"
+                                >
+                                    Edit
+                                </button>
                             </div>
                         </form>
                     </div>

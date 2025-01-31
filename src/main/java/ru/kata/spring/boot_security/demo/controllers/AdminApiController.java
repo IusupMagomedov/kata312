@@ -2,7 +2,9 @@ package ru.kata.spring.boot_security.demo.controllers;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
+import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.List;
 @RequestMapping("/api/admin")
 public class AdminApiController {
     private final UserService userService;
+    private final RoleService roleService;
 
     @GetMapping("/health-check")
     public String getHealthCheck() {
@@ -42,5 +45,10 @@ public class AdminApiController {
     @PostMapping("/delete")
     public void deleteUser(@RequestBody String id) {
         userService.deleteUser(Long.valueOf(id));
+    }
+
+    @GetMapping("/roles")
+    public List<Role> getRoles() {
+        return roleService.getRoles();
     }
 }

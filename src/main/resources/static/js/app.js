@@ -30,6 +30,8 @@ function fetchUsers() {
         }
     });
 }
+function inputChangeHandler() {
+}
 function deleteUser(id) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -48,6 +50,40 @@ function deleteUser(id) {
             }
             displayUsers();
             return "User was deleted";
+        }
+        catch (error) {
+            console.error('Error fetching users:', error);
+            throw error;
+        }
+    });
+}
+function updateUser(userId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            // @ts-ignore
+            event.preventDefault();
+            // @ts-ignore
+            const form = document.getElementById("editUserForm" + userId);
+            const updatedUser = {
+                id: 6, //userId,
+                name: "Birdo", //form.name.value,
+                lastName: "Pink", //form.lastName.value,
+                age: 25, //form.age.value,
+                email: "birdo@mail.com" //form.email.value
+            };
+            const response = yield fetch('http://localhost:8080/api/admin/update', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                    // Add any additional headers (e.g., authorization token) if needed
+                },
+                body: JSON.stringify(updatedUser)
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            displayUsers();
+            return "User was updated";
         }
         catch (error) {
             console.error('Error fetching users:', error);
@@ -108,11 +144,18 @@ function displayUsers() {
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form>
+                        <form
+                            id="editUserForm${user.id}"
+                        >
                             <input type="hidden" name="id" value="${user.id}">
                             <div class="form-group">
                                 <label>First Name</label>
-                                <input value="${user.name}" type="text" class="form-control" name="name">
+                                <input 
+                                    value="${user.name}" 
+                                    type="text" 
+                                    class="form-control" 
+                                    name="name"
+                                >
                             </div>
                             <div class="form-group">
                                 <label>Last Name</label>
@@ -124,11 +167,23 @@ function displayUsers() {
                             </div>
                             <div class="form-group">
                                 <label>Email</label>
-                                <input value="${user.email}" type="email" class="form-control" name="email">
+                                <input 
+                                    value="${user.email}" 
+                                    type="email" 
+                                    class="form-control" 
+                                    name="email"
+                                    onchange=""
+                                >
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <input type="submit" class="btn btn-primary" value="Update">
+                                <button
+                                        class="btn btn-primary"
+                                        data-dismiss="modal"
+                                        onclick="updateUser(${user.id})"
+                                >
+                                    Edit
+                                </button>
                             </div>
                         </form>
                     </div>
