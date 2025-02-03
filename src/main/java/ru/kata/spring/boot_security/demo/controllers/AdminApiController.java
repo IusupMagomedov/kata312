@@ -1,11 +1,15 @@
 package ru.kata.spring.boot_security.demo.controllers;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.dto.UserDto;
+import ru.kata.spring.boot_security.demo.dto.UserDtoImpl;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
+import ru.kata.spring.boot_security.demo.utils.UserMapper;
 
 import java.util.List;
 
@@ -19,6 +23,7 @@ import java.util.List;
 public class AdminApiController {
     private final UserService userService;
     private final RoleService roleService;
+    private final UserMapper userMapper;
 
     @GetMapping("/health-check")
     public String getHealthCheck() {
@@ -37,9 +42,10 @@ public class AdminApiController {
     }
 
     @PostMapping("/update")
-    public User updateUser(@RequestBody User user) {
+    public ResponseEntity updateUser(@RequestBody UserDtoImpl userDto) {
+        User user = userMapper.toUserWithId(userDto);
         userService.updateUser(user);
-        return user;
+        return ResponseEntity.ok("User updated successfully");
     }
 
     @PostMapping("/delete")

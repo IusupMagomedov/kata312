@@ -30,7 +30,49 @@ function fetchUsers() {
         }
     });
 }
-function inputChangeHandler() {
+function fetchRoles() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const response = yield fetch('http://localhost:8080/api/admin/roles', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // Add any additional headers (e.g., authorization token) if needed
+                },
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const roles = yield response.json();
+            return roles;
+        }
+        catch (error) {
+            console.error('Error fetching users:', error);
+            throw error;
+        }
+    });
+}
+function fetchUser(id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const response = yield fetch(`http://localhost:8080/api/user?id=${id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            // const user : User = await response.json();
+            // console.log("Fetched user: ", user);
+            return response.json();
+        }
+        catch (error) {
+            console.error('Error fetching users:', error);
+            throw error;
+        }
+    });
 }
 function deleteUser(id) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -64,18 +106,36 @@ function updateUser(userId) {
             event.preventDefault();
             // @ts-ignore
             const form = document.getElementById("editUserForm" + userId);
+            const formData = new FormData(form);
+            const fetchedUser = yield fetchUser(userId);
+            console.log("Fetched user: ", fetchedUser);
+            const roles = Array
+                .from(form
+                .querySelectorAll('input[name="roles"]:checked'))
+                // @ts-ignore
+                .map(checkbox => checkbox.value);
+            console.log("Roles:", roles);
             const updatedUser = {
-                id: 6, //userId,
-                name: "Birdo", //form.name.value,
-                lastName: "Pink", //form.lastName.value,
-                age: 25, //form.age.value,
-                email: "birdo@mail.com" //form.email.value
+                id: formData.get('id'),
+                username: formData.get('username'),
+                password: formData.get('password'),
+                name: formData.get('name'),
+                lastName: formData.get('lastName'),
+                age: formData.get('age'),
+                email: formData.get('email'),
+                roles: roles
             };
+            console.log("Updated user: ", updatedUser);
+            // formData.forEach((value, key) => {
+            //     if (key in updatedUser) {
+            //         // @ts-ignore
+            //         updatedUser[key] = value;
+            //     }
+            // });
             const response = yield fetch('http://localhost:8080/api/admin/update', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
-                    // Add any additional headers (e.g., authorization token) if needed
                 },
                 body: JSON.stringify(updatedUser)
             });
@@ -96,6 +156,8 @@ function displayUsers() {
         try {
             const users = yield fetchUsers();
             console.log('Fetched users:', users);
+            const roles = yield fetchRoles();
+            console.log('Fetched roles:', roles);
             // Get the container element
             const container = document.getElementById('users-table-container');
             if (container) {
@@ -124,6 +186,19 @@ function displayUsers() {
                     // Edit button and modal
                     const editTd = document.createElement('td');
                     editTd.classList.add('table-buttons');
+                    const rolesBlock = document.createElement('div');
+                    roles.forEach(role => {
+                        const div = document.createElement('div');
+                        div.innerHTML = `
+                    <input type="checkbox" name="roles" value="${role.id}"/>
+                    <label for="${role.id}">${role.name}</label><br/>
+                    `;
+                        rolesBlock.appendChild(div);
+                    });
+                    // <div th:each="role : ${roles}">
+                    // <input type="checkbox" name="roles" th:value="${role.id}"/>
+                    //     <label th:for="${role.id}" th:text="${role.name}"></label><br/>
+                    //     </div>
                     editTd.innerHTML = `
         <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#editUserModal${user.id}">
             Edit
@@ -148,6 +223,24 @@ function displayUsers() {
                             id="editUserForm${user.id}"
                         >
                             <input type="hidden" name="id" value="${user.id}">
+                            <div class="form-group">
+                                <label>Username</label>
+                                <input 
+                                    value="${user.username}" 
+                                    type="text" 
+                                    class="form-control" 
+                                    name="username"
+                                >
+                            </div>
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input 
+                                    value="${user.password}" 
+                                    type="password" 
+                                    class="form-control" 
+                                    name="password"
+                                >
+                            </div>
                             <div class="form-group">
                                 <label>First Name</label>
                                 <input 
@@ -175,6 +268,8 @@ function displayUsers() {
                                     onchange=""
                                 >
                             </div>
+                            <label>Roles</label>
+                            ${rolesBlock.innerHTML}
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 <button

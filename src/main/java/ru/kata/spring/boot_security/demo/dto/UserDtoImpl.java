@@ -2,8 +2,10 @@ package ru.kata.spring.boot_security.demo.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 public class UserDtoImpl implements UserDto {
     private String id;

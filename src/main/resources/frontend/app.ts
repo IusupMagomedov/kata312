@@ -12,13 +12,13 @@ interface User {
     lastName: string;
     age: number;
     email: string;
-    roles: Role[];
-    authorities: Role[];
+    roles: string[];
+    // authorities: Role[];
     stringRoles: string;
-    enabled: boolean;
-    accountNonLocked: boolean;
-    credentialsNonExpired: boolean;
-    accountNonExpired: boolean;
+    // enabled: boolean;
+    // accountNonLocked: boolean;
+    // credentialsNonExpired: boolean;
+    // accountNonExpired: boolean;
 }
 
 async function fetchUsers(): Promise<User[]> {
@@ -65,8 +65,26 @@ async function fetchRoles(): Promise<Role[]> {
     }
 }
 
-function inputChangeHandler() {
+async function fetchUser(id: number): Promise<User> {
+    try {
+        const response = await fetch(`http://localhost:8080/api/user?id=${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
 
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        // const user : User = await response.json();
+        // console.log("Fetched user: ", user);
+
+        return response.json();
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        throw error;
+    }
 }
 
 async function deleteUser(id: number): Promise<String> {
@@ -100,24 +118,47 @@ async function updateUser(userId: number): Promise<String> {
         event.preventDefault();
 
         // @ts-ignore
-        const form:HTMLFormElement = document.getElementById("editUserForm" + userId);
+        const form: HTMLFormElement = document.getElementById("editUserForm" + userId);
+
+        const formData =  new FormData(form);
+
+        const fetchedUser: User = await fetchUser(userId);
+
+        console.log("Fetched user: ", fetchedUser);
 
 
-
-
+        const roles = Array
+            .from(
+                form
+                    .querySelectorAll('input[name="roles"]:checked')
+            )
+            // @ts-ignore
+            .map(checkbox => checkbox.value);
+        console.log("Roles:", roles);
         const updatedUser = {
-            id: 6,//userId,
-            name: "Birdo",//form.name.value,
-            lastName: "Pink",//form.lastName.value,
-            age: 25,//form.age.value,
-            email: "birdo@mail.com"//form.email.value
+            id: formData.get('id'),
+            username: formData.get('username'),
+            password: formData.get('password'),
+            name: formData.get('name'),
+            lastName: formData.get('lastName'),
+            age: formData.get('age'),
+            email: formData.get('email'),
+            roles: roles
         };
+
+        console.log("Updated user: ", updatedUser);
+
+        // formData.forEach((value, key) => {
+        //     if (key in updatedUser) {
+        //         // @ts-ignore
+        //         updatedUser[key] = value;
+        //     }
+        // });
 
         const response = await fetch('http://localhost:8080/api/admin/update', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
-                // Add any additional headers (e.g., authorization token) if needed
             },
             body: JSON.stringify(updatedUser)
         });
@@ -181,7 +222,12 @@ async function displayUsers() {
 
 
                 roles.forEach(role => {
-                    const div = document.createElement()
+                    const div = document.createElement('div');
+                    div.innerHTML = `
+                    <input type="checkbox" name="roles" value="${role.id}"/>
+                    <label for="${role.id}">${role.name}</label><br/>
+                    `;
+                    rolesBlock.appendChild(div);
                 });
 
                 // <div th:each="role : ${roles}">
@@ -259,7 +305,7 @@ async function displayUsers() {
                                 >
                             </div>
                             <label>Roles</label>
-                            ${rolesBlock}
+                            ${rolesBlock.innerHTML}
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 <button
