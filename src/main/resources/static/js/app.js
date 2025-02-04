@@ -8,6 +8,68 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+const ADMIN = "ADMIN";
+const USER = "USER";
+const CREATE_USER = "create-user";
+let mainContent;
+let adminSideButton;
+let userSideButton;
+window.onload = printPage;
+let pageState = ADMIN;
+function printPage() {
+    return __awaiter(this, void 0, void 0, function* () {
+        mainContent = document.getElementById("content");
+        const user = yield fetchUser();
+        const isAdmin = user.stringRoles.includes(ADMIN);
+        // @ts-ignore
+        document.getElementById('username').innerText = user.name;
+        // @ts-ignore
+        document.getElementById('usersRoles').innerText = user.stringRoles;
+        adminSideButton = document.getElementById('adminSideButton');
+        userSideButton = document.getElementById('userSideButton');
+        // pageState = isAdmin ? ADMIN : USER;
+        switch (pageState) {
+            case ADMIN:
+                displayUsers();
+                break;
+            case USER:
+                displayUser();
+                break;
+            case CREATE_USER:
+                displayCreateUserForm;
+                break;
+        }
+    });
+}
+function clearContent() {
+    // @ts-ignore
+    mainContent.innerHTML = ``;
+}
+function adminHandler() {
+    console.log("Admin handler");
+    pageState = ADMIN;
+    clearContent();
+    printPage();
+}
+function userHandler() {
+    console.log("User handler");
+    pageState = USER;
+    clearContent();
+    printPage();
+}
+function createUserHandler() {
+    console.log("Create user handler");
+}
+function displayUser() {
+    // @ts-ignore
+    adminSideButton.classList.remove("active");
+    // @ts-ignore
+    userSideButton.classList.add("active");
+    console.log("Display user");
+}
+function displayCreateUserForm() {
+    console.log("Create user");
+}
 function fetchUsers() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -52,10 +114,10 @@ function fetchRoles() {
         }
     });
 }
-function fetchUser(id) {
+function fetchUser() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const response = yield fetch(`http://localhost:8080/api/user?id=${id}`, {
+            const response = yield fetch(`http://localhost:8080/api/user`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -107,7 +169,7 @@ function updateUser(userId) {
             // @ts-ignore
             const form = document.getElementById("editUserForm" + userId);
             const formData = new FormData(form);
-            const fetchedUser = yield fetchUser(userId);
+            const fetchedUser = yield fetchUser();
             console.log("Fetched user: ", fetchedUser);
             const roles = Array
                 .from(form
@@ -154,10 +216,37 @@ function updateUser(userId) {
 function displayUsers() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            // @ts-ignore
+            adminSideButton.classList.add("active");
+            // @ts-ignore
+            userSideButton.classList.remove("active");
             const users = yield fetchUsers();
             console.log('Fetched users:', users);
             const roles = yield fetchRoles();
             console.log('Fetched roles:', roles);
+            const tableHead = document.createElement('div');
+            tableHead.innerHTML = `
+        <div class="mt-3" id="users-table-container">
+            <h5>All users</h5>
+            <table class="table table-bordered" id="users-table">
+                <thead class="thead-light">
+                <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Age</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>`;
+            // @ts-ignore
+            mainContent.appendChild(tableHead);
             // Get the container element
             const container = document.getElementById('users-table-container');
             if (container) {
@@ -404,5 +493,3 @@ function displayUsers() {
         }
     });
 }
-// Call the function to display users
-displayUsers();

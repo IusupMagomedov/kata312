@@ -21,6 +21,78 @@ interface User {
     // accountNonExpired: boolean;
 }
 
+const ADMIN: string = "ADMIN";
+const USER: string = "USER";
+const CREATE_USER: string = "create-user";
+
+let mainContent: HTMLElement | null;
+let adminSideButton: HTMLElement | null;
+let userSideButton: HTMLElement | null;
+
+
+window.onload = printPage;
+
+let pageState: string = ADMIN;
+
+async function printPage() {
+    mainContent = document.getElementById("content");
+    const user: User= await fetchUser();
+    const isAdmin : boolean = user.stringRoles.includes(ADMIN);
+    // @ts-ignore
+    document.getElementById('username').innerText = user.name;
+    // @ts-ignore
+    document.getElementById('usersRoles').innerText = user.stringRoles;
+
+    adminSideButton = document.getElementById('adminSideButton');
+    userSideButton = document.getElementById('userSideButton');
+
+    // pageState = isAdmin ? ADMIN : USER;
+
+    switch (pageState) {
+        case ADMIN:
+            displayUsers();
+            break;
+        case USER:
+            displayUser();
+            break;
+        case CREATE_USER:
+            displayCreateUserForm;
+            break;
+    }
+
+}
+
+
+function adminHandler() {
+    console.log("Admin handler");
+    pageState = ADMIN;
+    printPage();
+}
+
+function userHandler() {
+    console.log("User handler");
+    pageState = USER;
+    // @ts-ignore
+    mainContent.innerHTML = ``;
+    printPage();
+}
+
+function createUserHandler() {
+    console.log("Create user handler");
+}
+
+function displayUser() {
+    // @ts-ignore
+    adminSideButton.classList.remove("active");
+    // @ts-ignore
+    userSideButton.classList.add("active");
+    console.log("Display user");
+}
+
+function displayCreateUserForm() {
+    console.log("Create user");
+}
+
 async function fetchUsers(): Promise<User[]> {
     try {
         const response = await fetch('http://localhost:8080/api/admin/users', {
@@ -65,9 +137,9 @@ async function fetchRoles(): Promise<Role[]> {
     }
 }
 
-async function fetchUser(id: number): Promise<User> {
+async function fetchUser(): Promise<User> {
     try {
-        const response = await fetch(`http://localhost:8080/api/user?id=${id}`, {
+        const response = await fetch(`http://localhost:8080/api/user`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -122,7 +194,7 @@ async function updateUser(userId: number): Promise<String> {
 
         const formData =  new FormData(form);
 
-        const fetchedUser: User = await fetchUser(userId);
+        const fetchedUser: User = await fetchUser();
 
         console.log("Fetched user: ", fetchedUser);
 
@@ -177,12 +249,42 @@ async function updateUser(userId: number): Promise<String> {
 
 async function displayUsers() {
     try {
+        // @ts-ignore
+        adminSideButton.classList.add("active");
+        // @ts-ignore
+        userSideButton.classList.remove("active");
+
         const users = await fetchUsers();
         console.log('Fetched users:', users);
 
 
         const roles = await fetchRoles();
-        console.log('Fetched roles:', roles)
+        console.log('Fetched roles:', roles);
+
+        const tableHead = document.createElement('div');
+        tableHead.innerHTML = `
+        <div class="mt-3" id="users-table-container">
+            <h5>All users</h5>
+            <table class="table table-bordered" id="users-table">
+                <thead class="thead-light">
+                <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Age</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>`;
+
+        // @ts-ignore
+        mainContent.appendChild(tableHead);
 
 
         // Get the container element
@@ -439,6 +541,3 @@ async function displayUsers() {
         console.error('Failed to fetch users:', error);
     }
 }
-
-// Call the function to display users
-displayUsers();
