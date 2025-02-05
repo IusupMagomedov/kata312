@@ -36,9 +36,10 @@ public class AdminApiController {
     }
 
     @PostMapping("/create")
-    public User createUser(@RequestBody User user) {
+    public ResponseEntity createUser(@RequestBody UserDtoImpl userDto) {
+        User user = userMapper.toUser(userDto);
         userService.createUser(user);
-        return user;
+        return ResponseEntity.ok("User created successfully");
     }
 
     @PostMapping("/update")

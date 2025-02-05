@@ -15,57 +15,53 @@ let usersTableContainer;
 let adminSideButton;
 let userSideButton;
 let mainContent;
+let adminContentToggle;
+let createContentToggle;
+let isAdmin;
 window.onload = printPage;
 let pageState = ADMIN;
 function printPage() {
     return __awaiter(this, void 0, void 0, function* () {
         usersTableContainer = document.getElementById("users-table-container");
         mainContent = document.getElementById("content");
-        // console.log("Reloading no need any more...")
+        adminContentToggle = document.getElementById("navbar-toggle-table");
+        createContentToggle = document.getElementById("navbar-toggle-create");
         const user = yield fetchUser();
-        const isAdmin = user.stringRoles.includes(ADMIN);
+        isAdmin = user.stringRoles.includes(ADMIN);
         // @ts-ignore
         document.getElementById('username').innerText = user.name;
         // @ts-ignore
         document.getElementById('usersRoles').innerText = user.stringRoles;
         adminSideButton = document.getElementById('adminSideButton');
         userSideButton = document.getElementById('userSideButton');
-        // pageState = isAdmin ? ADMIN : USER;
+        pageState = isAdmin ? ADMIN : USER;
         switch (pageState) {
             case ADMIN:
-                displayUsers();
+                printAdminsPage();
                 break;
             case USER:
-                displayUser();
+                printUsersPage(user);
                 break;
             case CREATE_USER:
-                displayCreateUserForm;
+                printCreateUserPage();
                 break;
         }
     });
 }
 function clearUsersTableContainer() {
-    // @ts-ignore
-    // usersTableContainer.innerHTML = `
-    //     <div class="mt-3" id="users-table-container">
-    //         <h5>All users</h5>
-    //         <table class="table table-bordered" id="users-table">
-    //             <thead class="thead-light">
-    //             <tr>
-    //                 <th>ID</th>
-    //                 <th>First Name</th>
-    //                 <th>Last Name</th>
-    //                 <th>Age</th>
-    //                 <th>Email</th>
-    //                 <th>Role</th>
-    //                 <th>Edit</th>
-    //                 <th>Delete</th>
-    //             </tr>
-    //             </thead>
-    //             <tbody>
-    //             </tbody>
-    //         </table>
-    //     </div>`;
+    return __awaiter(this, void 0, void 0, function* () {
+        // @ts-ignore
+        mainContent.innerHTML = `
+        <h2>Admin Panel</h2>
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" id="navbar-toggle-table" href=# onclick="adminHandler()">Users table</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href=# id="navbar-toggle-create" onclick="createUserToggleHandler()">New User</a>
+            </li>
+        </ul>`;
+    });
 }
 function adminHandler() {
     console.log("Admin handler");
@@ -78,18 +74,123 @@ function userHandler() {
     clearUsersTableContainer();
     printPage();
 }
-function createUserHandler() {
+function createUserToggleHandler() {
+    pageState = CREATE_USER;
+    printPage();
     console.log("Create user handler");
 }
-function displayUser() {
+function printUsersPage(user) {
+    if (!isAdmin) {
+        // @ts-ignore
+        document
+            .getElementById("adminSideButton")
+            .classList
+            .add("d-none");
+    }
     // @ts-ignore
     adminSideButton.classList.remove("active");
     // @ts-ignore
     userSideButton.classList.add("active");
+    // @ts-ignore
+    mainContent.innerHTML = `
+            <table class="table table-bordered">
+                <thead class="thead-light">
+                <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Age</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>${user.id}</td>
+                    <td>${user.name}</td>
+                    <td>${user.lastName}</td>
+                    <td>${user.age}</td>
+                    <td>${user.email}</td>
+                    <td>${user.stringRoles}</td>
+                </tr>
+                </tbody>
+            </table>`;
     console.log("Display user");
 }
-function displayCreateUserForm() {
+function printCreateUserPage() {
     console.log("Create user");
+    clearUsersTableContainer();
+    // @ts-ignore
+    document.getElementById("navbar-toggle-table").classList.remove("active");
+    // @ts-ignore
+    document.getElementById("navbar-toggle-create").classList.add("active");
+    // @ts-ignore
+    mainContent.innerHTML = `
+    <h2>Admin Panel</h2>
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link" id="navbar-toggle-table" href=# onclick="adminHandler()">Users table</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href=# id="navbar-toggle-create" onclick="createUserHandler()">New User</a>
+            </li>
+        </ul>
+        <div class="mt-3">
+            <h6>Add new user</h6>
+            <div class="container-fluid p-4 d-flex justify-content-center">
+                <div class="card card-container">
+                    <div class="card-body">
+                        <form class="justify-content-center" id="createUserForm">
+                            <label class="form-label">Username</label>
+                            <input 
+                                type="text" 
+                                class="form-control text-dark" 
+                                name="username" 
+                                value="yoshi">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control" value="yoshi" name="password" >
+                            <label class="form-label">First name</label>
+                            <input type="text" class="form-control text-dark" value="Yoshi" name="name" required>
+                            <label class="form-label">Last name</label>
+                            <input type="text" class="form-control text-dark" value="Dino" name="lastName" >
+                            <label class="form-label">Age</label>
+                            <input type="number" class="form-control" value="27" name="age" >
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control text-dark" value="yoshi@gmail.com" name="email" >
+                            <div>
+                                <div class="form-check">
+                                    <input 
+                                        class="form-check-input" 
+                                        type="checkbox" 
+                                        name="roles" 
+                                        value="1">
+                                    <label 
+                                        class="form-check-label" 
+                                    >ADMIN</label>
+                                </div>
+                                <div class="form-check">
+                                    <input 
+                                        class="form-check-input" 
+                                        type="checkbox" 
+                                        name="roles" 
+                                        value="2"
+                                        checked>
+                                    <label 
+                                        class="form-check-label" 
+                                    >USER</label>
+                                </div>
+                            </div>
+                            <button 
+                                class="btn btn-success w-100"
+                                onclick="createUser()"
+                            >
+                                Add new user
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>`;
 }
 function fetchUsers() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -173,7 +274,7 @@ function deleteUser(id) {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            displayUsers();
+            printPage();
             return "User was deleted";
         }
         catch (error) {
@@ -209,12 +310,6 @@ function updateUser(userId) {
                 roles: roles
             };
             console.log("Updated user: ", updatedUser);
-            // formData.forEach((value, key) => {
-            //     if (key in updatedUser) {
-            //         // @ts-ignore
-            //         updatedUser[key] = value;
-            //     }
-            // });
             const response = yield fetch('http://localhost:8080/api/admin/update', {
                 method: 'POST',
                 headers: {
@@ -225,7 +320,7 @@ function updateUser(userId) {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            displayUsers();
+            printPage();
             return "User was updated";
         }
         catch (error) {
@@ -234,24 +329,92 @@ function updateUser(userId) {
         }
     });
 }
-function displayUsers() {
+function createUser() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            // @ts-ignore
+            event.preventDefault();
+            // @ts-ignore
+            const form = document.getElementById("createUserForm");
+            console.log(form);
+            const formData = new FormData(form);
+            // const fetchedUser: User = await fetchUser();
+            //
+            // console.log("Fetched user: ", fetchedUser);
+            //
+            //
+            const roles = Array
+                .from(form
+                .querySelectorAll('input[name="roles"]:checked'))
+                // @ts-ignore
+                .map(checkbox => checkbox.value);
+            console.log("Roles:", roles);
+            const createdUser = {
+                id: formData.get('id'),
+                username: formData.get('username'),
+                password: formData.get('password'),
+                name: formData.get('name'),
+                lastName: formData.get('lastName'),
+                age: formData.get('age'),
+                email: formData.get('email'),
+                roles: roles
+            };
+            console.log("Creating user: ", createdUser);
+            const response = yield fetch('http://localhost:8080/api/admin/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(createdUser)
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            pageState = ADMIN;
+            printPage();
+            return "User was created";
+        }
+        catch (error) {
+            console.error('Error fetching users:', error);
+            throw error;
+        }
+    });
+}
+function printAdminsPage() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            clearUsersTableContainer();
             // @ts-ignore
             adminSideButton.classList.add("active");
             // @ts-ignore
             userSideButton.classList.remove("active");
+            // @ts-ignore
             const users = yield fetchUsers();
             console.log('Fetched users:', users);
             const roles = yield fetchRoles();
             console.log('Fetched roles:', roles);
             const tableHead = document.createElement('div');
-            tableHead.innerHTML = `
-        <div class="mt-3" id="users-table-container">
-        </div>`;
+            tableHead.classList.add("mt-3");
+            tableHead.id = "users-table-container";
+            tableHead.innerHTML = `<h5>All users</h5>
+            <table class="table table-bordered" id="users-table">
+                <thead class="thead-light">
+                <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Age</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>`;
             // @ts-ignore
             mainContent.appendChild(tableHead);
-            clearUsersTableContainer();
             // Get the container element
             const container = document.getElementById('users-table-container');
             if (container) {
