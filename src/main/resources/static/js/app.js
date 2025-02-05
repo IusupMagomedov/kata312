@@ -11,14 +11,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 const ADMIN = "ADMIN";
 const USER = "USER";
 const CREATE_USER = "create-user";
-let mainContent;
+let usersTableContainer;
 let adminSideButton;
 let userSideButton;
+let mainContent;
 window.onload = printPage;
 let pageState = ADMIN;
 function printPage() {
     return __awaiter(this, void 0, void 0, function* () {
+        usersTableContainer = document.getElementById("users-table-container");
         mainContent = document.getElementById("content");
+        // console.log("Reloading no need any more...")
         const user = yield fetchUser();
         const isAdmin = user.stringRoles.includes(ADMIN);
         // @ts-ignore
@@ -41,20 +44,38 @@ function printPage() {
         }
     });
 }
-function clearContent() {
+function clearUsersTableContainer() {
     // @ts-ignore
-    mainContent.innerHTML = ``;
+    // usersTableContainer.innerHTML = `
+    //     <div class="mt-3" id="users-table-container">
+    //         <h5>All users</h5>
+    //         <table class="table table-bordered" id="users-table">
+    //             <thead class="thead-light">
+    //             <tr>
+    //                 <th>ID</th>
+    //                 <th>First Name</th>
+    //                 <th>Last Name</th>
+    //                 <th>Age</th>
+    //                 <th>Email</th>
+    //                 <th>Role</th>
+    //                 <th>Edit</th>
+    //                 <th>Delete</th>
+    //             </tr>
+    //             </thead>
+    //             <tbody>
+    //             </tbody>
+    //         </table>
+    //     </div>`;
 }
 function adminHandler() {
     console.log("Admin handler");
     pageState = ADMIN;
-    clearContent();
     printPage();
 }
 function userHandler() {
     console.log("User handler");
     pageState = USER;
-    clearContent();
+    clearUsersTableContainer();
     printPage();
 }
 function createUserHandler() {
@@ -227,26 +248,10 @@ function displayUsers() {
             const tableHead = document.createElement('div');
             tableHead.innerHTML = `
         <div class="mt-3" id="users-table-container">
-            <h5>All users</h5>
-            <table class="table table-bordered" id="users-table">
-                <thead class="thead-light">
-                <tr>
-                    <th>ID</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Age</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
         </div>`;
             // @ts-ignore
             mainContent.appendChild(tableHead);
+            clearUsersTableContainer();
             // Get the container element
             const container = document.getElementById('users-table-container');
             if (container) {

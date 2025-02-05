@@ -13,21 +13,17 @@ interface User {
     age: number;
     email: string;
     roles: string[];
-    // authorities: Role[];
     stringRoles: string;
-    // enabled: boolean;
-    // accountNonLocked: boolean;
-    // credentialsNonExpired: boolean;
-    // accountNonExpired: boolean;
 }
 
 const ADMIN: string = "ADMIN";
 const USER: string = "USER";
 const CREATE_USER: string = "create-user";
 
-let mainContent: HTMLElement | null;
+let usersTableContainer: HTMLElement | null;
 let adminSideButton: HTMLElement | null;
 let userSideButton: HTMLElement | null;
+let mainContent: HTMLElement | null;
 
 
 window.onload = printPage;
@@ -35,6 +31,7 @@ window.onload = printPage;
 let pageState: string = ADMIN;
 
 async function printPage() {
+    usersTableContainer = document.getElementById("users-table-container");
     mainContent = document.getElementById("content");
     const user: User= await fetchUser();
     const isAdmin : boolean = user.stringRoles.includes(ADMIN);
@@ -62,6 +59,29 @@ async function printPage() {
 
 }
 
+function clearUsersTableContainer() {
+    // @ts-ignore
+    // usersTableContainer.innerHTML = `
+    //     <div class="mt-3" id="users-table-container">
+    //         <h5>All users</h5>
+    //         <table class="table table-bordered" id="users-table">
+    //             <thead class="thead-light">
+    //             <tr>
+    //                 <th>ID</th>
+    //                 <th>First Name</th>
+    //                 <th>Last Name</th>
+    //                 <th>Age</th>
+    //                 <th>Email</th>
+    //                 <th>Role</th>
+    //                 <th>Edit</th>
+    //                 <th>Delete</th>
+    //             </tr>
+    //             </thead>
+    //             <tbody>
+    //             </tbody>
+    //         </table>
+    //     </div>`;
+}
 
 function adminHandler() {
     console.log("Admin handler");
@@ -72,8 +92,7 @@ function adminHandler() {
 function userHandler() {
     console.log("User handler");
     pageState = USER;
-    // @ts-ignore
-    mainContent.innerHTML = ``;
+    clearUsersTableContainer();
     printPage();
 }
 
@@ -264,29 +283,14 @@ async function displayUsers() {
         const tableHead = document.createElement('div');
         tableHead.innerHTML = `
         <div class="mt-3" id="users-table-container">
-            <h5>All users</h5>
-            <table class="table table-bordered" id="users-table">
-                <thead class="thead-light">
-                <tr>
-                    <th>ID</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Age</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
         </div>`;
+
+
 
         // @ts-ignore
         mainContent.appendChild(tableHead);
 
-
+        clearUsersTableContainer();
         // Get the container element
         const container = document.getElementById('users-table-container');
 
