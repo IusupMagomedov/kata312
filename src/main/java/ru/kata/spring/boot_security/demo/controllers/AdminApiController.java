@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.dto.UserDto;
-import ru.kata.spring.boot_security.demo.dto.UserDtoImpl;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
@@ -36,14 +35,14 @@ public class AdminApiController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity createUser(@RequestBody UserDtoImpl userDto) {
+    public ResponseEntity createUser(@RequestBody UserDto userDto) {
         User user = userMapper.toUser(userDto);
         userService.createUser(user);
         return ResponseEntity.ok("User created successfully");
     }
 
     @PostMapping("/update")
-    public ResponseEntity updateUser(@RequestBody UserDtoImpl userDto) {
+    public ResponseEntity updateUser(@RequestBody UserDto userDto) {
         User user = userMapper.toUserWithId(userDto);
         userService.updateUser(user);
         return ResponseEntity.ok("User updated successfully");

@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.kata.spring.boot_security.demo.dto.UserDtoImpl;
+import ru.kata.spring.boot_security.demo.dto.UserDto;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
@@ -64,7 +64,7 @@ public class AdminController {
     }
 
     @PostMapping("/create")
-    public String createUser(@ModelAttribute UserDtoImpl userDtoImpl) {
+    public String createUser(@ModelAttribute UserDto userDtoImpl) {
         User user = userMapper.toUser(userDtoImpl);
         userService.createUser(user);
         return "redirect:/admin";
@@ -85,8 +85,8 @@ public class AdminController {
     }
 
     @PostMapping("/update")
-    public String updateUser(@ModelAttribute UserDtoImpl userDtoImpl) {
-        User user = userMapper.toUserWithId(userDtoImpl);
+    public String updateUser(@ModelAttribute UserDto userDto) {
+        User user = userMapper.toUserWithId(userDto);
         userService.updateUser(user);
         return "redirect:/admin";
     }

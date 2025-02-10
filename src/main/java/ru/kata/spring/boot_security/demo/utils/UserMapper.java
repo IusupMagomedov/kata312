@@ -2,7 +2,7 @@ package ru.kata.spring.boot_security.demo.utils;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.kata.spring.boot_security.demo.dto.UserDtoImpl;
+import ru.kata.spring.boot_security.demo.dto.UserDto;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 
@@ -13,24 +13,24 @@ import java.util.Set;
 public class UserMapper {
     private final RoleMapper roleMapper;
 
-    public User toUser(UserDtoImpl userDtoImpl) {
-        Set<Role> roles = roleMapper.getRoles(userDtoImpl.getRoles());
+    public User toUser(UserDto userDto) {
+        Set<Role> roles = roleMapper.getRoles(userDto.getRoles());
 
         User user = new User();
-        user.setUsername(userDtoImpl.getUsername());
-        user.setPassword(userDtoImpl.getPassword());
-        user.setName(userDtoImpl.getName());
-        user.setLastName(userDtoImpl.getLastName());
-        user.setAge(Integer.parseInt(userDtoImpl.getAge()));
-        user.setEmail(userDtoImpl.getEmail());
+        user.setUsername(userDto.getUsername());
+        user.setPassword(userDto.getPassword());
+        user.setName(userDto.getName());
+        user.setLastName(userDto.getLastName());
+        user.setAge(Integer.parseInt(userDto.getAge()));
+        user.setEmail(userDto.getEmail());
         user.setRoles(roles);
 
         return user;
     }
 
-    public User toUserWithId(UserDtoImpl userDtoImpl) {
-        User user = toUser(userDtoImpl);
-        user.setId(Long.parseLong(userDtoImpl.getId()));
+    public User toUserWithId(UserDto userDto) {
+        User user = toUser(userDto);
+        user.setId(Long.parseLong(userDto.getId()));
         return user;
     }
 }
