@@ -51,7 +51,7 @@ async function printPage() {
     adminSideButton = document.getElementById('adminSideButton');
     userSideButton = document.getElementById('userSideButton');
 
-    pageState = isAdmin ? ADMIN : USER;
+    pageState = !isAdmin ? USER : pageState;
 
 
     switch (pageState) {

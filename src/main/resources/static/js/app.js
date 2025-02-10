@@ -34,7 +34,7 @@ function printPage() {
         document.getElementById('usersRoles').innerText = user.stringRoles;
         adminSideButton = document.getElementById('adminSideButton');
         userSideButton = document.getElementById('userSideButton');
-        pageState = isAdmin ? ADMIN : USER;
+        pageState = !isAdmin ? USER : pageState;
         switch (pageState) {
             case ADMIN:
                 printAdminsPage();
