@@ -32,16 +32,13 @@ public class User implements UserDetails {
     private String lastName;
     private int age;
     private String email;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<Role> roles;
 
     public String getStringRoles() {
-        StringBuilder sBRoles = new StringBuilder();
-        sBRoles = new StringBuilder(roles
-                .stream()
+        return roles.stream()
                 .map(role -> role.getName().substring(5))
-                .collect(Collectors.joining(" ")));
-        return sBRoles.toString();
+                .collect(Collectors.joining(" "));
     }
 
     @Override

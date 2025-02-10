@@ -30,6 +30,7 @@ public class DBInit {
     private void setRoles() {
         Role admin = new Role();
         admin.setName("ROLE_ADMIN");
+
         Role user = new Role();
         user.setName("ROLE_USER");
 
@@ -38,74 +39,82 @@ public class DBInit {
     }
 
     private void setUsers() {
-        Role user = roleService.findByName("ROLE_USER").orElseThrow(
-                () -> new RuntimeException("Role not found")
-        );
-        Role admin = roleService.findByName("ROLE_ADMIN").orElseThrow(
-                () -> new RuntimeException("Role not found")
-        );
+        try {
+            Role user = roleService.findByName("ROLE_USER").orElseThrow(
+                    () -> new RuntimeException("Role not found: ROLE_USER")
+            );
+            Role admin = roleService.findByName("ROLE_ADMIN").orElseThrow(
+                    () -> new RuntimeException("Role not found: ROLE_ADMIN")
+            );
 
-        User mario = User.builder()
-                .username("mario")
-                .password("mario")
-                .name("Mario")
-                .lastName("Rossi")
-                .age(35)
-                .email("mario@gmail.com")
-                .roles(new HashSet<>(Arrays.asList(user, admin)))
-                .build();
+            User mario = User.builder()
+                    .username("mario")
+                    .password("mario")
+                    .name("Mario")
+                    .lastName("Rossi")
+                    .age(35)
+                    .email("mario@gmail.com")
+                    .roles(new HashSet<>(Arrays.asList(user, admin)))
+                    .build();
 
-        User luigi = User.builder()
-                .username("luigi")
-                .password("luigi")
-                .name("Luigi")
-                .lastName("Verdi")
-                .age(30)
-                .email("luigi@gmail.com")
-                .roles(new HashSet<>(Collections.singleton(user)))
-                .build();
+            User luigi = User.builder()
+                    .username("luigi")
+                    .password("luigi")
+                    .name("Luigi")
+                    .lastName("Verdi")
+                    .age(30)
+                    .email("luigi@gmail.com")
+                    .roles(new HashSet<>(Collections.singleton(user)))
+                    .build();
 
-        User peach = User.builder()
-                .username("peach")
-                .password("peach")
-                .name("Peach")
-                .lastName("Bianchi")
-                .age(28)
-                .email("peach@gmail.com")
-                .roles(new HashSet<>(Collections.singleton(user)))
-                .build();
+            User peach = User.builder()
+                    .username("peach")
+                    .password("peach")
+                    .name("Peach")
+                    .lastName("Bianchi")
+                    .age(28)
+                    .email("peach@gmail.com")
+                    .roles(new HashSet<>(Collections.singleton(user)))
+                    .build();
 
-        User toad = User.builder()
-                .username("toad")
-                .password("toad")
-                .name("Toad")
-                .lastName("Fungi")
-                .age(25)
-                .email("toad@gmail.com")
-                .roles(new HashSet<>(Collections.singleton(user)))
-                .build();
+            User toad = User.builder()
+                    .username("toad")
+                    .password("toad")
+                    .name("Toad")
+                    .lastName("Fungi")
+                    .age(25)
+                    .email("toad@gmail.com")
+                    .roles(new HashSet<>(Collections.singleton(user)))
+                    .build();
 
-        User bowser = User.builder()
-                .username("bowser")
-                .password("bowser")
-                .name("Bowser")
-                .lastName("Koopa")
-                .age(40)
-                .email("bowser@gmail.com")
-                .roles(new HashSet<>(Collections.singleton(user)))
-                .build();
+            User bowser = User.builder()
+                    .username("bowser")
+                    .password("bowser")
+                    .name("Bowser")
+                    .lastName("Koopa")
+                    .age(40)
+                    .email("bowser@gmail.com")
+                    .roles(new HashSet<>(Collections.singleton(user)))
+                    .build();
 
-        User birdo = User.builder()
-                .username("birdo")
-                .password("birdo")
-                .name("Birdo")
-                .lastName("Pink")
-                .age(29)
-                .email("birdo@gmail.com")
-                .roles(new HashSet<>(Collections.singleton(user)))
-                .build();
+            User birdo = User.builder()
+                    .username("birdo")
+                    .password("birdo")
+                    .name("Birdo")
+                    .lastName("Pink")
+                    .age(29)
+                    .email("birdo@gmail.com")
+                    .roles(new HashSet<>(Collections.singleton(user)))
+                    .build();
 
-        users.addAll(Arrays.asList(mario, luigi, peach, toad, bowser, birdo));
+            users.addAll(Arrays.asList(mario, luigi, peach, toad, bowser, birdo));
+
+            // Create users...
+        } catch (RuntimeException e) {
+            System.err.println("Error in setUsers(): " + e.getMessage());
+            throw e; // Re-throw the exception to fail fast
+        }
+
     }
 
     @PostConstruct
